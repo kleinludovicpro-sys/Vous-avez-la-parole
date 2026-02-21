@@ -3,1416 +3,248 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>6e — Atelier Rédaction (ludique + points)</title>
+  <title>QCM Grammaire – GN & Phrase</title>
   <style>
     :root{
-      --bg:#0b1220; --card:#101a2f; --muted:#9bb0d0; --text:#eaf1ff;
-      --accent:#63e6be; --accent2:#74c0fc; --warn:#ffd43b; --bad:#ff6b6b;
-      --ok:#51cf66; --border:rgba(255,255,255,.08);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --bg:#0f1115; --card:#ffffffee; --ink:#111; --muted:#555;
+      --accent:#0088ce; --good:#1a7f37; --bad:#b42318; --line:#0000001a;
     }
     *{box-sizing:border-box}
     body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:
-        radial-gradient(1200px 600px at 10% 0%, rgba(18,32,71,.9), transparent),
-        radial-gradient(900px 500px at 95% 15%, rgba(29,96,124,.35), transparent),
-        var(--bg);
-      color:var(--text);
+      margin:0; min-height:100vh; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#0f1115,#151923); color:#fff;
+      display:flex; align-items:center; justify-content:center; padding:16px;
     }
+    .wrap{width:min(980px,100%);}
     header{
-      padding:16px 14px;
-      border-bottom:1px solid var(--border);
-      position:sticky; top:0;
-      backdrop-filter: blur(10px);
-      background:rgba(11,18,32,.72);
-      z-index:5;
+      display:flex; gap:12px; align-items:flex-start; justify-content:space-between; margin-bottom:12px;
     }
-    header .top{
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center; justify-content:space-between;
-    }
-    header h1{margin:0;font-size:16px; letter-spacing:.2px}
-    header p{margin:6px 0 0; color:var(--muted); font-size:12.5px; line-height:1.35}
-    .wrap{max-width:1100px;margin:0 auto;padding:14px;}
-    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 16px;}
-    .tab{
-      border:1px solid var(--border);
-      background:rgba(16,26,47,.65);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:750;
-      font-size:13px;
-      box-shadow: 0 8px 22px rgba(0,0,0,.15);
-      transition:.15s transform ease, .15s background ease, .15s border-color ease;
-    }
-    .tab:hover{transform:translateY(-1px)}
-    .tab.active{
-      outline:2px solid rgba(99,230,190,.35);
-      border-color:rgba(99,230,190,.35);
-      background:rgba(99,230,190,.10);
-    }
-
-    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:12px;}
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr;} header{position:static;} }
-
+    h1{font-size:20px; margin:0}
+    .sub{color:#cfd6e6; margin:6px 0 0; font-size:13px; line-height:1.35}
     .card{
-      background:rgba(16,26,47,.72);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:14px;
-      box-shadow: var(--shadow);
+      background:var(--card); color:var(--ink);
+      border:1px solid var(--line); border-radius:16px; padding:16px;
+      box-shadow:0 10px 30px #00000055;
     }
-    .card h2{margin:0 0 10px; font-size:16px}
-    .card h3{margin:14px 0 8px; font-size:14px; color:#d8e5ff}
-    .muted{color:var(--muted); font-size:13px; line-height:1.35}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-top:10px;}
     .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border:1px solid var(--border);
-      border-radius:999px; background:rgba(255,255,255,.03); font-size:13px;
+      display:inline-flex; gap:8px; align-items:center;
+      background:#f3f6ff; border:1px solid #d7e2ff; color:#102a43;
+      padding:8px 10px; border-radius:999px; font-size:12px;
     }
-    .score{font-weight:900; color:var(--accent); font-size:16px}
-    .btn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:800;
-      font-size:13px;
-      transition:.15s transform ease, .15s background ease, .15s border-color ease;
+    button{
+      border:0; border-radius:12px; padding:10px 12px; cursor:pointer;
+      background:var(--accent); color:#fff; font-weight:700;
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn.primary{background:rgba(99,230,190,.14); border-color:rgba(99,230,190,.22);}
-    .btn.secondary{background:rgba(116,192,252,.12); border-color:rgba(116,192,252,.22);}
-    .btn.danger{background:rgba(255,107,107,.12); border-color:rgba(255,107,107,.22);}
-
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-    textarea, input[type="text"]{
-      width:100%;
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--border);
-      color:var(--text);
-      border-radius:14px;
-      padding:12px;
-      font-size:14px;
-      outline:none;
-      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    button.secondary{background:#eef2f6; color:#111; border:1px solid var(--line); font-weight:700}
+    button.ghost{background:transparent; border:1px dashed #c8d2e6; color:#17324a}
+    button:disabled{opacity:.55; cursor:not-allowed}
+    .qTop{
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between; margin-bottom:10px;
     }
-    textarea{min-height:180px; resize:vertical; line-height:1.45}
-    .q{
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      margin:10px 0;
-      background:rgba(255,255,255,.02);
-    }
-    .q .stem{font-weight:850; margin-bottom:8px;}
+    .qIdx{font-weight:800; color:#0b3550}
+    .qType{color:#0b3550; font-size:12px; background:#e6f2fb; border:1px solid #bfe3fb; padding:3px 8px; border-radius:999px;}
+    .prompt{font-size:16px; line-height:1.35; margin:8px 0 10px;}
+    .options{display:grid; gap:8px; margin:10px 0;}
     label.opt{
       display:flex; gap:10px; align-items:flex-start;
-      padding:6px 6px; cursor:pointer; color:#dbe7ff;
-      border-radius:12px;
+      border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fff;
+      cursor:pointer;
     }
-    label.opt:hover{background:rgba(255,255,255,.03)}
-    label.opt input{margin-top:3px;}
-    .tag{
-      display:inline-block; padding:4px 8px; border-radius:999px;
-      font-size:12px; border:1px solid var(--border); color:#dbe7ff; background:rgba(255,255,255,.03);
+    label.opt:hover{border-color:#b9d7f0}
+    input[type="radio"]{margin-top:3px}
+    .inputWrap{display:grid; gap:6px; margin:10px 0;}
+    input[type="text"], textarea{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); font-size:15px;
     }
-    .kpi{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
-    @media (max-width: 560px){ .kpi{grid-template-columns:1fr;} }
-    .kpi .box{
-      padding:10px;border-radius:16px;border:1px solid var(--border);
-      background:rgba(255,255,255,.02)
+    textarea{min-height:86px; resize:vertical}
+    .feedback{
+      margin-top:12px; padding:12px; border-radius:12px;
+      border:1px solid var(--line); background:#fafbff;
     }
-    .good{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
-    details{border:1px solid var(--border); border-radius:14px; padding:10px; background:rgba(255,255,255,.02);}
-    details summary{cursor:pointer; font-weight:850;}
-    .small{font-size:12px; color:var(--muted)}
-    .hr{height:1px;background:var(--border); margin:12px 0;}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;}
-    .banner{
-      border:1px solid rgba(99,230,190,.22);
-      background:linear-gradient(135deg, rgba(99,230,190,.14), rgba(116,192,252,.10));
-      border-radius:18px;
-      padding:12px;
-      box-shadow: var(--shadow);
+    .ok{border-color:#b7e3c2; background:#f0fff4}
+    .ko{border-color:#f7c0bb; background:#fff3f2}
+    .fbTitle{font-weight:900; margin:0 0 6px}
+    .fbText{margin:0; color:#222; line-height:1.35}
+    .muted{color:var(--muted)}
+    .hr{height:1px; background:var(--line); margin:12px 0}
+    .small{font-size:12px}
+    .summary{
+      display:grid; gap:10px;
     }
-    .progress{
-      height:10px; border-radius:999px; border:1px solid var(--border);
-      background:rgba(255,255,255,.03); overflow:hidden;
+    .score{
+      font-size:18px; font-weight:900;
     }
-    .progress > div{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, rgba(99,230,190,.95), rgba(116,192,252,.85));
-      border-radius:999px;
-      transition: width .4s ease;
+    .list{
+      border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff;
+      max-height:260px; overflow:auto;
     }
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px;
-      border:1px solid var(--border); background:rgba(255,255,255,.03);
-      font-size:13px; font-weight:850;
-    }
-    .toast{
-      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background:rgba(16,26,47,.92);
-      border:1px solid rgba(99,230,190,.22);
-      color:var(--text);
-      padding:10px 12px; border-radius:14px;
-      box-shadow: var(--shadow);
-      opacity:0; pointer-events:none;
-      transition: opacity .25s ease, transform .25s ease;
-      max-width:min(92vw, 640px);
-      z-index:50;
-    }
-    .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
-    .spark{
-      display:inline-block;
-      filter: drop-shadow(0 10px 18px rgba(99,230,190,.25));
+    .item{padding:8px 6px; border-bottom:1px solid var(--line)}
+    .item:last-child{border-bottom:0}
+    .tagGood{color:var(--good); font-weight:800}
+    .tagBad{color:var(--bad); font-weight:800}
+    .kbd{
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px; padding:2px 6px; border-radius:8px; border:1px solid var(--line); background:#f6f8fa;
     }
   </style>
 </head>
+
 <body>
-<header>
-  <div class="top">
-    <div>
-      <h1>🧠 Atelier Rédaction 6e — version ludique</h1>
-      <p>Leçon complète + QCM noté + ateliers notés + feux tricolores + temps passé + rapport parent imprimable.</p>
-    </div>
-    <div class="pill">
-      <span class="spark">🏰</span>
-      <span>Niveau : <b id="level">1</b></span>
-      <span>•</span>
-      <span>XP : <b id="xp">0</b></span>
-    </div>
-  </div>
-</header>
-
 <div class="wrap">
-  <div class="tabs">
-    <button class="tab active" data-tab="lesson">📚 Leçon</button>
-    <button class="tab" data-tab="qcm">✅ QCM</button>
-    <button class="tab" data-tab="workshops">✍️ Ateliers</button>
-    <button class="tab" data-tab="report">🏁 Bilan Parent</button>
+  <header>
+    <div>
+      <h1>QCM Grammaire – Phrase & Expansions du GN</h1>
+      <p class="sub">
+        Mode “ensemble” : tu réponds, tu cliques <span class="kbd">Valider</span>, et le corrigé apparaît tout de suite (avec explication).
+        Puis <span class="kbd">Question suivante</span>.
+      </p>
+    </div>
+    <div class="pill" id="statusPill">Chargement…</div>
+  </header>
+
+  <div class="card" id="app"></div>
+
+  <div class="row" style="margin-top:12px">
+    <button class="secondary" id="btnRestart">Recommencer</button>
+    <button class="ghost" id="btnShuffle">Mélanger les questions</button>
   </div>
 
-  <div id="view"></div>
+  <p class="sub small" style="margin-top:10px; opacity:.9">
+    Astuce : si ton fils écrit une réponse courte (ex: “épithète”, “complément du nom”, “relative”), ça marche.
+    Le quiz accepte plusieurs formulations proches.
+  </p>
 </div>
-
-<div id="toast" class="toast"></div>
 
 <script>
-/* =========================================================
-   1) CONTENU DE COURS (issu de tes documents)
-========================================================= */
-const LESSON = {
-  methode: [
-    "Lis plusieurs fois la consigne et repère les verbes (décrire / raconter / imaginer / continuer…).",
-    "Observe le texte : personnages, lieu, moment, but (faire rire / émouvoir / effrayer / réfléchir…), temps (passé/présent), point de vue (1re/3e).",
-    "Au brouillon : note les idées, puis organise-les en plan. Fais des paragraphes pour marquer les péripéties.",
-    "Rédige en suivant ton plan : phrases complètes, vocabulaire soigné, orthographe.",
-    "Relis : sens des phrases + construction + accords + ponctuation, puis recopie au propre.",
-  ],
-  dialogue: [
-    "À chaque changement de personnage : retour à la ligne + tiret.",
-    "Tu peux ajouter des incises (dit-il, répondit-elle…) pour indiquer qui parle.",
-    "Utilise des verbes de parole variés : demander, répliquer, s’exclamer, murmurer, protester…",
-    "Le dialogue doit faire avancer l’action (pas du blabla).",
-  ],
-  description: [
-    "Évite “il y a” et le verbe “être” quand tu peux : préfère des verbes précis.",
-    "Ajoute des verbes de perception : voir, entendre, sentir, toucher, goûter…",
-    "Enrichis les groupes nominaux : adjectifs + compléments du nom.",
-    "Situe dans l’espace : ici, là-bas, au-dessus, derrière, à droite…",
-    "Au passé : description souvent à l’imparfait. Au présent : description au présent.",
-  ],
-  connecteurs: {
-    "Expliquer / justifier": ["en effet", "car", "parce que", "puisque"],
-    "Opposer / nuancer": ["mais", "pourtant", "cependant", "néanmoins", "toutefois", "au contraire", "en revanche", "quand même"],
-    "Ajouter": ["aussi", "et", "également", "de même", "de plus", "en plus", "non seulement … mais encore"],
-    "Reformuler": ["autrement dit", "en un mot", "c’est-à-dire", "en d’autres termes", "en résumé", "en somme"],
-    "Présenter / illustrer": ["par exemple", "ainsi", "notamment", "comme", "pour preuve", "à l’image de"],
-    "Conclure": ["c’est pourquoi", "par conséquent", "ainsi", "enfin", "finalement"],
-  },
-  poesie: [
-    "Une strophe = un groupe de vers (on saute une ligne entre les strophes).",
-    "Types de vers : octosyllabe (8 syllabes), décasyllabe (10), alexandrin (12).",
-    "Rimes : plates (AABB), croisées (ABAB), embrassées (ABBA).",
-    "Sonorités : allitérations (consonnes), assonances (voyelles), répétitions (anaphores).",
-    "Images : comparaisons, métaphores, figures de style.",
-  ],
-};
-
-/* =========================================================
-   2) QCM NOTÉ (corrigé + explications)
-========================================================= */
-const QCM = [
+/* =========================
+   BANQUE DE QUESTIONS
+   =========================
+   Types:
+   - mcq : QCM (une seule réponse)
+   - short : réponse courte (texte)
+   - transform : transformation (texte un peu plus long)
+*/
+const QUESTIONS = [
+  // --- PHRASE / NON-PHRASE / PONCTUATION ---
   {
-    cat:"Dialogue",
-    stem:"Dans un récit, à chaque changement de personnage dans un dialogue, on…",
+    id:"p1",
+    theme:"Phrase",
+    type:"mcq",
+    prompt:"La différence entre une non-phrase et une phrase, c’est surtout…",
     options:[
-      "reste sur la même ligne et on met une virgule",
-      "va à la ligne et on met un tiret",
-      "met un point-virgule et on continue",
-      "met des parenthèses"
+      "La non-phrase n’a pas de verbe conjugué.",
+      "La non-phrase n’a aucun sens (ou n’est pas construite comme une phrase).",
+      "La non-phrase est forcément une phrase interrogative.",
+      "La phrase n’a pas besoin de ponctuation."
     ],
     answer:1,
-    explain:"Dialogue de récit : retour à la ligne + tiret quand le personnage change."
+    explain:"Une non-phrase n’est pas une phrase construite avec sens (ex: suite de mots sans construction). Une phrase, elle, a du sens et une structure."
   },
   {
-    cat:"Dialogue",
-    stem:"Quel choix est le plus adapté pour enrichir un dialogue ?",
-    options:[
-      "Utiliser toujours le verbe “dire”",
-      "Éviter toute action",
-      "Varier les verbes de parole (murmurer, répliquer, s’exclamer…)",
-      "Ne pas indiquer qui parle"
-    ],
+    id:"p2",
+    theme:"Phrase",
+    type:"mcq",
+    prompt:"La ponctuation forte en fin de phrase, c’est :",
+    options:["La virgule", "Le point-virgule", "Le point / le point d’interrogation / le point d’exclamation", "Les deux-points"],
     answer:2,
-    explain:"On varie les verbes de parole et on peut mettre des incises."
+    explain:"Ponctuation forte = signes qui terminent une phrase : . ? !"
   },
   {
-    cat:"Description",
-    stem:"Pour une description plus précise, on évite surtout…",
-    options:[
-      "les adjectifs",
-      "“il y a” et le verbe “être” (quand c’est possible)",
-      "les verbes de perception",
-      "les connecteurs spatiaux"
-    ],
-    answer:1,
-    explain:"On cherche des verbes plus précis que “être/il y a” et un vocabulaire riche."
-  },
-  {
-    cat:"Connecteurs",
-    stem:"Le connecteur “néanmoins” sert surtout à…",
-    options:["ajouter", "opposer / nuancer", "conclure", "illustrer"],
-    answer:1,
-    explain:"“Néanmoins” = opposition / nuance."
-  },
-  {
-    cat:"Poésie",
-    stem:"Une strophe, c’est…",
-    options:[
-      "un type de rime",
-      "un ensemble de vers",
-      "une comparaison",
-      "un connecteur logique"
-    ],
-    answer:1,
-    explain:"Strophe = groupe de vers."
-  },
-  {
-    cat:"Poésie",
-    stem:"Des rimes croisées, c’est plutôt…",
-    options:["AABB", "ABBA", "ABAB", "AAAA"],
+    id:"p3",
+    theme:"Phrase",
+    type:"mcq",
+    prompt:"Combien de formes de phrases apprend-on souvent (affirmative, négative, exclamative, interrogative, injonctive) ?",
+    options:["2","3","5","7"],
     answer:2,
-    explain:"Rimes croisées : ABAB."
+    explain:"On travaille classiquement 5 formes : affirmative, négative, interrogative, exclamative, injonctive (ou impérative)."
   },
   {
-    cat:"Méthode",
-    stem:"Avant d’écrire, la première étape utile est de…",
-    options:[
-      "copier directement au propre",
-      "lire la consigne et repérer ce qu’on doit faire",
-      "compter les lignes de la feuille",
-      "inventer la fin sans plan"
+    id:"p4",
+    theme:"Phrase",
+    type:"mcq",
+    prompt:"“Range ta chambre !” est une phrase…",
+    options:["déclarative","interrogative","injonctive (impérative)","négative"],
+    answer:2,
+    explain:"C’est un ordre/consigne → injonctive (souvent à l’impératif)."
+  },
+  {
+    id:"p5",
+    theme:"Phrase",
+    type:"mcq",
+    prompt:"“Est-ce que tu viens ?” est une phrase…",
+    options:["interrogative","exclamative","injonctive","déclarative"],
+    answer:0,
+    explain:"Point d’interrogation et question → interrogative."
+  },
+
+  // --- GN BASIQUE ---
+  {
+    id:"gn1",
+    theme:"GN",
+    type:"short",
+    prompt:"Un groupe nominal (GN) est composé au minimum de : déterminant + _____.",
+    accept:[
+      /nom/i,
+      /un\s+nom/i
     ],
+    explain:"GN minimal : déterminant + nom (noyau)."
+  },
+  {
+    id:"gn2",
+    theme:"GN",
+    type:"mcq",
+    prompt:"Dans “les herbes”, le mot noyau du GN (le nom noyau) est :",
+    options:["les","herbes","les herbes","aucun"],
     answer:1,
-    explain:"On commence par comprendre la consigne (verbes, attentes, contraintes)."
+    explain:"Le déterminant = “les”, le nom noyau = “herbes”."
   },
-];
 
-/* =========================================================
-   3) TEXTES SUPPORT + ATELIERS
-========================================================= */
-const TEXTS = [
+  // --- EXPANSIONS : ADJECTIF EPITHETE ---
   {
-    title:"Texte support 1 (récit — court)",
-    body:
-`Hier soir, le vent secouait les volets. Dans le couloir, une odeur de poussière montait lentement.
-Soudain, un grincement a traversé la maison, comme une plainte. Je me suis figé.
-— Qui est là ? ai-je soufflé.
-Le silence a répondu, puis un pas a résonné derrière la porte.
-Je n’avais plus le choix : je devais agir.`
+    id:"adj1",
+    theme:"Expansions du nom",
+    type:"mcq",
+    prompt:"Dans “de belles roses”, “belles” est :",
+    options:["un déterminant","un adjectif épithète","un complément du nom","une relative"],
+    answer:1,
+    explain:"Adjectif qualificatif collé au nom : fonction épithète."
   },
   {
-    title:"Texte support 2 (description — court)",
-    body:
-`Le parc s’étendait au pied des immeubles. À gauche, un banc écaillé attendait sous un platane.
-Plus loin, la fontaine envoyait des éclats d’eau froide. J’entendais des rires, puis le frottement des
-baskets sur le gravier. L’air sentait l’herbe coupée, et une lumière dorée glissait entre les branches.`
-  }
-];
-
-const PROMPTS = [
-  {
-    id:"dialogue",
-    title:"Quête 1 — Le duel de répliques (Dialogue) — 12 à 18 lignes",
-    consigne:
-      "Écris une scène où deux personnages se rencontrent dans un lieu précis (parc, gare, forêt…). " +
-      "Le dialogue doit faire avancer l’action. Utilise au moins 3 verbes de parole différents et des incises.",
-    points: 20,
-    rules: [
-      { key:"dialogueLines", label:"Tiret à chaque changement de personnage", pts:6 },
-      { key:"speechVerbs", label:"Au moins 3 verbes de parole variés", pts:6 },
-      { key:"incises", label:"Au moins 2 incises (ex : répondit-il…)", pts:4 },
-      { key:"actionWords", label:"Le dialogue fait avancer l’action (mots d’action)", pts:4 },
+    id:"adj2",
+    theme:"Expansions du nom",
+    type:"mcq",
+    prompt:"Un adjectif épithète…",
+    options:[
+      "s’accorde avec le nom en genre et en nombre",
+      "ne s’accorde jamais",
+      "est toujours après le nom",
+      "est toujours un verbe"
     ],
+    answer:0,
+    explain:"Il s’accorde (ex : des roses odorantes / une rose odorante)."
   },
   {
-    id:"description",
-    title:"Quête 2 — La carte du lieu (Description) — 8 à 12 lignes",
-    consigne:
-      "Décris un lieu en utilisant des verbes de perception (voir, entendre, sentir…) et des repères spatiaux. " +
-      "Évite “il y a” et “être” autant que possible.",
-    points: 20,
-    rules: [
-      { key:"perceptionVerbs", label:"Au moins 3 verbes de perception", pts:7 },
-      { key:"spatial", label:"Au moins 3 repères spatiaux (à gauche, derrière…)", pts:5 },
-      { key:"avoidIlYa", label:"Peu de “il y a” / “être” (bonus si peu)", pts:4 },
-      { key:"richNounGroups", label:"Groupes nominaux enrichis (adjectifs/compléments)", pts:4 },
-    ],
+    id:"adj3",
+    theme:"Expansions du nom",
+    type:"mcq",
+    prompt:"Les adjectifs épithètes sont…",
+    options:["obligatoires","facultatifs : on peut souvent les supprimer","interdits en français","uniquement dans les poèmes"],
+    answer:1,
+    explain:"On peut souvent les supprimer : la phrase garde du sens mais perd de la précision."
+  },
+
+  // --- EXPANSIONS : GNP COMPLEMENT DU NOM ---
+  {
+    id:"gnp1",
+    theme:"Expansions du nom",
+    type:"mcq",
+    prompt:"Dans “un crayon de couleurs”, “de couleurs” est :",
+    options:["un adjectif épithète","un groupe nominal sujet","un groupe nominal prépositionnel (complément du nom)","une relative"],
+    answer:2,
+    explain:"“de + nom” = groupe prépositionnel (GNP) → complément du nom."
   },
   {
-    id:"connecteurs",
-    title:"Quête 3 — Le pont des idées (Connecteurs) — 10 à 14 lignes",
-    consigne:
-      "Raconte un petit événement et utilise au moins 6 connecteurs logiques, dont : 1 pour justifier, 1 pour opposer, 1 pour conclure.",
-    points: 20,
-    rules: [
-      { key:"connectorsCount", label:"Au moins 6 connecteurs logiques", pts:8 },
-      { key:"hasJustify", label:"Au moins 1 connecteur de justification", pts:4 },
-      { key:"hasOppose", label:"Au moins 1 connecteur d’opposition", pts:4 },
-      { key:"hasConclude", label:"Au moins 1 connecteur de conclusion", pts:4 },
-    ],
-  },
-  {
-    id:"poesie",
-    title:"Quête 4 — Le sortilège des vers (Poésie) — 2 strophes",
-    consigne:
-      "Écris un poème de 2 strophes (séparées par une ligne vide). Essaie un schéma de rimes (AABB, ABAB ou ABBA). " +
-      "Ajoute au moins une comparaison ou une métaphore.",
-    points: 20,
-    rules: [
-      { key:"strophes", label:"2 strophes (ligne vide entre)", pts:6 },
-      { key:"linesAsVers", label:"Au moins 8 vers au total", pts:6 },
-      { key:"imagery", label:"Au moins 1 comparaison ou métaphore", pts:4 },
-      { key:"sound", label:"Sonorités (répétitions repérables)", pts:4 },
-    ],
-  },
-];
-
-/* =========================================================
-   4) ANALYSE AUTOMATIQUE (heuristique, utile)
-========================================================= */
-const CONNECTORS_FLAT = Object.values(LESSON.connecteurs).flat();
-const JUSTIFY = LESSON.connecteurs["Expliquer / justifier"];
-const OPPOSE  = LESSON.connecteurs["Opposer / nuancer"];
-const CONCLUDE= LESSON.connecteurs["Conclure"];
-const SPATIAL = ["ici","là-bas","la","devant","derriere","dessus","dessous","au-dessus","au-dessous","a gauche","a droite","plus loin","pres","au milieu","a travers","par-dessus","par-dessous","sur","sous","dans","contre"];
-const PERCEPTION = ["voir","regarder","apercevoir","entendre","ecouter","sentir","respirer","toucher","palper","gouter","savourer","distinguer","remarquer"];
-const SPEECH_VERBS = ["demander","questionner","interroger","repondre","repliquer","retorquer","s'exclamer","crier","murmurer","souffler","protester","acquiescer","balbutier","bafouiller","marteler","ordonner","chuchoter","avouer","ajouter"];
-const ACTION_HINTS = ["court","courir","saisit","attrape","ouvre","ferme","recule","avance","tombe","fuit","frappe","pousse","tire","se leve","se tourne","entre","sort","cache","cherche","prend","pose"];
-
-function norm(s){
-  return (s||"")
-    .toLowerCase()
-    .replaceAll("’","'")
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,""); // sans accents
-}
-function escapeRegExp(str){ return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
-function uniqueFound(text, list){
-  const t = norm(text);
-  const found = [];
-  for(const item of list){
-    const it = norm(item);
-    const re = new RegExp("(?:^|\\b|\\s)"+ escapeRegExp(it) +"(?:\\b|\\s|$)");
-    if(re.test(t)) found.push(item);
-  }
-  return [...new Set(found)];
-}
-
-function analyze(text){
-  const t = text || "";
-  const tn = norm(t);
-  const lines = t.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
-  const blankLineCount = (t.match(/\n\s*\n/g)||[]).length;
-
-  const dashLines = lines.filter(l => l.startsWith("-")).length;
-  const incises = (tn.match(/\b(dit|repondit|demanda|ajouta|souffla|murmura|cria|protesta|retorqua)\b/g)||[]).length;
-
-  const speechFound = uniqueFound(t, SPEECH_VERBS);
-  const perceptionFound = uniqueFound(t, PERCEPTION);
-  const spatialFound = uniqueFound(t, SPATIAL);
-
-  const connectorsFound = uniqueFound(t, CONNECTORS_FLAT);
-  const hasJustify = uniqueFound(t, JUSTIFY).length>0;
-  const hasOppose  = uniqueFound(t, OPPOSE).length>0;
-  const hasConclude= uniqueFound(t, CONCLUDE).length>0;
-
-  const ilya = (tn.match(/\bil y a\b/g)||[]).length;
-  const etre = (tn.match(/\b(etre|est|sont|etait|etaient|serait|sera|suis|es|sommes|etes)\b/g)||[]).length;
-
-  const actionFound = uniqueFound(t, ACTION_HINTS);
-
-  const versCount = lines.length;
-  const strophes = blankLineCount >= 1 ? 2 : 1;
-
-  const imagery = /\b(comme|tel|telle|pareil a|semblable a)\b/.test(tn) || /\bmetaphore\b/.test(tn);
-  const words = tn.split(/[^a-zA-Z']+/).filter(w=>w.length>2);
-  const freq = {};
-  for(const w of words){ freq[w]=(freq[w]||0)+1; }
-  const repeated = Object.entries(freq).filter(([w,c])=>c>=3 && !["pour","avec","dans","mais","plus","tres","bien"].includes(w)).map(([w])=>w);
-  const sound = repeated.length>0;
-
-  // Indice "GN enrichis" très léger : adjectifs approximatifs
-  const adjGuess = (tn.match(/\b\w+(?:eux|euse|if|ive|ant|ente|able|ible|ique|al|ale|elle|elles|es|e)\b/g)||[]).length;
-  const richNounGroups = Math.min(1, Math.floor(adjGuess / 20));
-
-  return {
-    dashLines, incises,
-    speechFound, perceptionFound, spatialFound,
-    connectorsFound, hasJustify, hasOppose, hasConclude,
-    ilya, etre, actionFound,
-    versCount, strophes, imagery, sound, repeated,
-    richNounGroups
-  };
-}
-
-function scoreForPrompt(promptId, text){
-  const p = PROMPTS.find(x=>x.id===promptId);
-  const a = analyze(text);
-  let score = 0;
-  const detail = [];
-
-  function add(pts, ok, why){
-    if(ok){ score += pts; detail.push({ok:true, pts, why}); }
-    else { detail.push({ok:false, pts, why}); }
-  }
-
-  if(promptId==="dialogue"){
-    add(6, a.dashLines>=8, `Tirets (lignes commençant par "-") : ${a.dashLines} (objectif ≥ 8)`);
-    add(6, a.speechFound.length>=3, `Verbes de parole variés : ${a.speechFound.length} (${a.speechFound.join(", ")||"aucun"})`);
-    add(4, a.incises>=2, `Incises repérées : ${a.incises} (objectif ≥ 2)`);
-    add(4, a.actionFound.length>=3, `Action (indices) : ${a.actionFound.slice(0,6).join(", ") || "peu d’indices"}`);
-  }
-
-  if(promptId==="description"){
-    add(7, a.perceptionFound.length>=3, `Verbes de perception : ${a.perceptionFound.length} (${a.perceptionFound.join(", ")||"aucun"})`);
-    add(5, a.spatialFound.length>=3, `Repères spatiaux : ${a.spatialFound.length} (${a.spatialFound.join(", ")||"aucun"})`);
-    const okAvoid = (a.ilya<=1 && a.etre<=4);
-    add(4, okAvoid, `“il y a” : ${a.ilya} | formes de “être” (approx) : ${a.etre} (objectif : peu)`);
-    add(4, a.richNounGroups>=1, `Groupes nominaux enrichis (indice) : ${a.richNounGroups ? "ok" : "à renforcer"}`);
-  }
-
-  if(promptId==="connecteurs"){
-    add(8, a.connectorsFound.length>=6, `Connecteurs différents : ${a.connectorsFound.length} (${a.connectorsFound.join(", ")||"aucun"})`);
-    add(4, a.hasJustify, `Justifier : ${a.hasJustify ? "ok" : "manque un connecteur (car / parce que / puisque…)"}`);
-    add(4, a.hasOppose, `Opposer : ${a.hasOppose ? "ok" : "manque un connecteur (mais / pourtant / néanmoins…)"}`);
-    add(4, a.hasConclude, `Conclure : ${a.hasConclude ? "ok" : "manque un connecteur (c’est pourquoi / par conséquent…)"}`);
-  }
-
-  if(promptId==="poesie"){
-    add(6, a.strophes>=2, `Strophes : ${a.strophes} (objectif : 2, avec une ligne vide entre)`);
-    add(6, a.versCount>=8, `Vers : ${a.versCount} (objectif ≥ 8)`);
-    add(4, a.imagery, `Image (comparaison/métaphore) : ${a.imagery ? "ok" : "ajoute “comme”, “tel”, ou une métaphore"}`);
-    add(4, a.sound, `Sonorités/répétitions : ${a.sound ? "ok" : "ajoute une répétition (anaphore) ou une allitération"}`);
-  }
-
-  score = Math.min(p.points, score);
-  return { score, max:p.points, detail, analysis:a };
-}
-
-/* =========================================================
-   5) ÉTAT + STOCKAGE LOCAL
-========================================================= */
-const KEY="atelier_redac_6e_ludique_v2";
-let state = loadState() || {
-  name: "",
-  qcmAnswers: {},       // index -> option
-  workshopText: {},     // id -> text
-  workshopScores: {},   // id -> {score,max,ts,detail,analysis}
-  workshopAttempts: {}, // id -> nb corrections
-  timeSpentSec: 0,      // temps total passé
-  xp: 0,                // gamification
-  badges: {},           // badgeId -> true
-};
-
-function saveState(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-function loadState(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
-function resetAll(){
-  state = {
-    name:"", qcmAnswers:{}, workshopText:{}, workshopScores:{},
-    workshopAttempts:{}, timeSpentSec:0, xp:0, badges:{}
-  };
-  saveState();
-  render(currentTab);
-  updateHeaderHUD();
-  toast("🧹 Tout a été réinitialisé !");
-}
-
-/* =========================================================
-   6) TEMPS PASSÉ (actif) + format
-========================================================= */
-let lastTick = Date.now();
-let active = true;
-let lastActivity = Date.now();
-function markActivity(){ lastActivity = Date.now(); }
-["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
-  window.addEventListener(ev, markActivity, {passive:true});
-});
-document.addEventListener("visibilitychange", ()=>{
-  active = !document.hidden;
-  lastTick = Date.now();
-});
-setInterval(()=>{
-  const now = Date.now();
-  const dt = (now - lastTick) / 1000;
-  lastTick = now;
-  const recentlyActive = (now - lastActivity) < 60000;
-  if(active && recentlyActive){
-    state.timeSpentSec = (state.timeSpentSec || 0) + dt;
-    saveState();
-    // pas de render en boucle (on reste light)
-  }
-}, 1000);
-
-function formatTime(sec){
-  sec = Math.floor(sec || 0);
-  const h = Math.floor(sec/3600);
-  const m = Math.floor((sec%3600)/60);
-  const s = sec%60;
-  if(h>0) return `${h}h ${m}min`;
-  if(m>0) return `${m}min ${s}s`;
-  return `${s}s`;
-}
-
-/* =========================================================
-   7) NOTE /20 + appréciation + feux détaillés
-========================================================= */
-function computeQcmScore(){
-  let score=0, answered=0;
-  for(let i=0;i<QCM.length;i++){
-    if(state.qcmAnswers[i]!==undefined){
-      answered++;
-      if(state.qcmAnswers[i]===QCM[i].answer) score++;
-    }
-  }
-  return { score, max:QCM.length, done: answered===QCM.length };
-}
-function computeWorkshopTotal(){
-  let score=0, max=0, doneCount=0;
-  for(const p of PROMPTS){
-    max += p.points;
-    const s = state.workshopScores[p.id];
-    if(s){ score += s.score; doneCount++; }
-  }
-  return { score, max, doneCount };
-}
-
-function computeGradeOn20(){
-  const q = computeQcmScore();      // /7
-  const w = computeWorkshopTotal(); // /80
-  const qPart = q.max ? (q.score/q.max)*4 : 0;
-  const wPart = w.max ? (w.score/w.max)*16 : 0;
-  const grade = Math.round((qPart+wPart)*10)/10;
-  return { grade, qPart: Math.round(qPart*10)/10, wPart: Math.round(wPart*10)/10 };
-}
-function appreciationFromGrade(g){
-  if(g >= 16) return "Très bon travail : méthode acquise, consignes respectées, progrès visibles.";
-  if(g >= 13) return "Bon travail : solide, mais encore des points à renforcer (voir les feux).";
-  if(g >= 10) return "Travail moyen : les bases sont là, mais il faut reprendre la leçon et refaire au moins 2 quêtes.";
-  return "Insuffisant : reprendre la leçon, refaire le QCM, puis réécrire les quêtes avec correction.";
-}
-
-function skillLightsDetailed(){
-  const get = (id)=>{
-    const s = state.workshopScores[id];
-    if(!s) return null;
-    const pct = s.max ? (s.score/s.max) : 0;
-    return { pct, score:s.score, max:s.max };
-  };
-  function light(o, hint){
-    if(!o) return { icon:"⚪", txt:"non fait", hint:"Fais l’exercice puis corrige-le." };
-    if(o.pct >= .8) return { icon:"🟢", txt:"acquis", hint:"Continue comme ça." };
-    if(o.pct >= .5) return { icon:"🟠", txt:"à renforcer", hint };
-    return { icon:"🔴", txt:"à reprendre", hint };
-  }
-  const hints = {
-    dialogue: "Ajoute des tirets à chaque réplique, 2 incises, et 3 verbes de parole variés.",
-    description: "Ajoute 3 verbes de perception + 3 repères spatiaux et limite “il y a / être”.",
-    connecteurs: "Mets au moins 6 connecteurs + “car” + “néanmoins” + “c’est pourquoi”.",
-    poesie: "Fais 2 strophes (ligne vide) + 8 vers + une comparaison (“comme…”)."
-  };
-  return {
-    dialogue: light(get("dialogue"), hints.dialogue),
-    description: light(get("description"), hints.description),
-    connecteurs: light(get("connecteurs"), hints.connecteurs),
-    poesie: light(get("poesie"), hints.poesie),
-  };
-}
-
-/* =========================================================
-   8) LUDIQUE : XP, niveaux, badges
-========================================================= */
-function levelFromXp(xp){
-  // progression simple : niveau n = somme (n*60)
-  let level = 1;
-  let need = 60;
-  let remaining = xp;
-  while(remaining >= need){
-    remaining -= need;
-    level++;
-    need = 60 + (level-1)*20;
-  }
-  const nextNeed = need;
-  const progress = Math.round((remaining / nextNeed) * 100);
-  return { level, remaining, nextNeed, progress };
-}
-
-function addXp(amount, reason){
-  amount = Math.max(0, Math.floor(amount));
-  const before = levelFromXp(state.xp||0).level;
-  state.xp = (state.xp||0) + amount;
-  saveState();
-  const after = levelFromXp(state.xp||0).level;
-  updateHeaderHUD();
-  if(amount>0) toast(`✨ +${amount} XP — ${reason}`);
-  if(after > before) toast(`🏆 Niveau ${after} atteint !`);
-  checkBadges();
-}
-
-function awardBadge(id, title){
-  if(state.badges && state.badges[id]) return;
-  state.badges = state.badges || {};
-  state.badges[id] = true;
-  saveState();
-  toast(`🏅 Badge débloqué : ${title}`);
-}
-
-function checkBadges(){
-  const q = computeQcmScore();
-  const w = computeWorkshopTotal();
-  const lights = skillLightsDetailed();
-
-  if(q.done && q.score===q.max) awardBadge("qcm_perfect", "Sans faute au QCM");
-  if(q.done) awardBadge("qcm_done", "QCM terminé");
-  if(w.doneCount>=1) awardBadge("first_quest", "Première quête corrigée");
-  if(w.doneCount===PROMPTS.length) awardBadge("all_quests", "Toutes les quêtes corrigées");
-
-  // 16/20 ou plus
-  const g = computeGradeOn20().grade;
-  if(g>=16) awardBadge("grade_16", "Note parent ≥ 16/20");
-
-  // Feux verts partout (si tout fait + acquis)
-  if(lights.dialogue.icon==="🟢" && lights.description.icon==="🟢" && lights.connecteurs.icon==="🟢" && lights.poesie.icon==="🟢"){
-    awardBadge("all_green", "Tout au vert");
-  }
-}
-
-function updateHeaderHUD(){
-  const xpEl = document.getElementById("xp");
-  const levelEl = document.getElementById("level");
-  const l = levelFromXp(state.xp||0);
-  if(xpEl) xpEl.textContent = String(state.xp||0);
-  if(levelEl) levelEl.textContent = String(l.level);
-}
-
-/* =========================================================
-   9) UI / NAV
-========================================================= */
-const view = document.getElementById("view");
-const toastEl = document.getElementById("toast");
-function toast(msg){
-  toastEl.textContent = msg;
-  toastEl.classList.add("show");
-  setTimeout(()=>toastEl.classList.remove("show"), 2600);
-}
-
-let currentTab="lesson";
-document.querySelectorAll(".tab").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentTab = btn.dataset.tab;
-    render(currentTab);
-  });
-});
-
-function escapeHtml(str){
-  return (str||"").replace(/[&<>"']/g, m=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
-}
-
-function render(tab){
-  if(tab==="lesson") renderLesson();
-  if(tab==="qcm") renderQCM();
-  if(tab==="workshops") renderWorkshops();
-  if(tab==="report") renderReport();
-  updateHeaderHUD();
-}
-
-/* =========================================================
-   10) WIDGETS : points + barre de progression + badges
-========================================================= */
-function renderPointsWidget(){
-  const qcm = computeQcmScore();
-  const ws  = computeWorkshopTotal();
-  const total = qcm.score + ws.score;
-  const max = qcm.max + ws.max;
-
-  const grade = computeGradeOn20();
-  const lvl = levelFromXp(state.xp||0);
-
-  return `
-    <div class="banner">
-      <div class="row" style="justify-content:space-between; gap:12px;">
-        <div>
-          <div class="small">Progression aventure</div>
-          <div class="pill">🏆 Note parent : <span class="score" style="margin-left:6px">${grade.grade} / 20</span></div>
-          <div class="small">QCM ${qcm.score}/${qcm.max} • Quêtes ${ws.score}/${ws.max} • Total ${total}/${max}</div>
-        </div>
-        <div style="min-width:240px; width:320px; max-width:100%;">
-          <div class="small">Niveau ${lvl.level} — ${lvl.remaining}/${lvl.nextNeed} XP</div>
-          <div class="progress"><div style="width:${lvl.progress}%"></div></div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderBadges(){
-  const all = [
-    ["qcm_done","QCM terminé"],
-    ["qcm_perfect","Sans faute au QCM"],
-    ["first_quest","Première quête corrigée"],
-    ["all_quests","Toutes les quêtes corrigées"],
-    ["grade_16","Note ≥ 16/20"],
-    ["all_green","Tout au vert"],
-  ];
-  const got = state.badges || {};
-  return `
-    <div class="row">
-      ${all.map(([id,label])=>{
-        const ok = !!got[id];
-        return `<span class="badge" title="${escapeHtml(label)}">${ok ? "🏅" : "🔒"} ${escapeHtml(label)}</span>`;
-      }).join("")}
-    </div>
-  `;
-}
-
-/* =========================================================
-   11) PAGE : LEÇON
-========================================================= */
-function renderLesson(){
-  view.innerHTML = `
-  <div class="grid">
-    <div class="card">
-      <h2>📚 Leçon (le grimoire du rédacteur)</h2>
-      <p class="muted">Lis vite fait, puis passe aux quêtes. Le but : écrire mieux, pas rester bloqué sur la théorie.</p>
-
-      ${renderPointsWidget()}
-
-      <div class="hr"></div>
-
-      <h3>🧠 Méthode (brouillon → plan → rédaction → relecture)</h3>
-      <ul class="muted">${LESSON.methode.map(x=>`<li>${x}</li>`).join("")}</ul>
-
-      <h3>💬 Dialogue dans un récit</h3>
-      <ul class="muted">${LESSON.dialogue.map(x=>`<li>${x}</li>`).join("")}</ul>
-
-      <h3>🖼️ Description</h3>
-      <ul class="muted">${LESSON.description.map(x=>`<li>${x}</li>`).join("")}</ul>
-
-      <h3>🔗 Connecteurs logiques (banque)</h3>
-      ${Object.entries(LESSON.connecteurs).map(([k,v])=>`
-        <details>
-          <summary>${escapeHtml(k)}</summary>
-          <div class="small">${v.map(w=>`<span class="tag">${escapeHtml(w)}</span>`).join(" ")}</div>
-        </details>
-      `).join("<div class='hr'></div>")}
-
-      <h3>🎭 Poésie (bases)</h3>
-      <ul class="muted">${LESSON.poesie.map(x=>`<li>${x}</li>`).join("")}</ul>
-
-      <div class="hr"></div>
-      <h3>🏅 Badges</h3>
-      ${renderBadges()}
-    </div>
-
-    <div class="card">
-      <h2>👤 Profil élève</h2>
-      <p class="muted">Entre le prénom de ton fils (ça reste sur l’appareil).</p>
-      <input id="name" type="text" placeholder="Prénom" value="${escapeHtml(state.name||"")}" />
-      <div class="row" style="margin-top:10px;">
-        <button class="btn primary" id="saveName">Enregistrer</button>
-        <button class="btn danger" id="resetAll">Tout réinitialiser</button>
-      </div>
-
-      <div class="hr"></div>
-      <h2>🎮 Mini-objectif du jour</h2>
-      <div class="q">
-        <div class="stem">Mission éclair</div>
-        <div class="muted">Fais le QCM + corrige au moins 1 quête. Objectif : <b>+120 XP</b>.</div>
-        <div class="small">Astuce : corriger 2 fois la même quête, c’est bien (amélioration réelle).</div>
-      </div>
-
-      <div class="hr"></div>
-      <h2>⏱️ Temps passé</h2>
-      <div class="pill">Temps actif : <b id="timeSpent">${escapeHtml(formatTime(state.timeSpentSec||0))}</b></div>
-      <div class="small" style="margin-top:8px;">Le temps se cumule quand l’onglet est visible + activité récente.</div>
-    </div>
-  </div>
-  `;
-
-  document.getElementById("saveName").onclick = ()=>{
-    state.name = document.getElementById("name").value.trim();
-    saveState();
-    toast("✅ Prénom enregistré");
-    render("lesson");
-  };
-  document.getElementById("resetAll").onclick = ()=>{
-    if(confirm("Tout effacer (nom, QCM, quêtes, points, temps) ?")) resetAll();
-  };
-
-  // petit refresh du temps sans re-render complet
-  const timeEl = document.getElementById("timeSpent");
-  if(timeEl){
-    const id = setInterval(()=>{
-      timeEl.textContent = formatTime(state.timeSpentSec||0);
-    }, 1000);
-    // stop interval if tab changed (simple)
-    setTimeout(()=>clearInterval(id), 20000);
-  }
-}
-
-/* =========================================================
-   12) PAGE : QCM
-========================================================= */
-function renderQuestion(q, idx){
-  const chosen = state.qcmAnswers[idx];
-  return `
-    <div class="q">
-      <div class="stem">${idx+1}. <span class="tag">${escapeHtml(q.cat)}</span> ${escapeHtml(q.stem)}</div>
-      ${q.options.map((opt, i)=>`
-        <label class="opt">
-          <input type="radio" name="q${idx}" value="${i}" ${chosen===i?'checked':''} />
-          <span>${escapeHtml(opt)}</span>
-        </label>
-      `).join("")}
-    </div>
-  `;
-}
-
-function renderQCM(){
-  const qcm = computeQcmScore();
-  view.innerHTML = `
-  <div class="grid">
-    <div class="card">
-      <h2>✅ QCM (le portail de la connaissance)</h2>
-      <p class="muted">Réponds à tout, puis clique “Corrigé”. Bonus XP si tu fais un sans-faute.</p>
-
-      ${renderPointsWidget()}
-
-      <div class="hr"></div>
-
-      ${QCM.map((q, idx)=>renderQuestion(q, idx)).join("")}
-
-      <div class="row" style="margin-top:12px;">
-        <button class="btn primary" id="showScore">Corrigé + Score</button>
-        <span class="pill">Score actuel : <span class="score" style="margin-left:6px">${qcm.score} / ${qcm.max}</span></span>
-      </div>
-
-      <div id="qcmFeedback" style="margin-top:12px;"></div>
-    </div>
-
-    <div class="card">
-      <h2>🎯 Conseils rapides</h2>
-      <div class="q">
-        <div class="stem">Pour gagner</div>
-        <div class="muted">
-          Dialogue : tirets + verbes de parole variés.<br/>
-          Description : perception + repères spatiaux.<br/>
-          Connecteurs : car / néanmoins / c’est pourquoi.<br/>
-          Poésie : 2 strophes, 8 vers, image “comme…”.
-        </div>
-      </div>
-      <div class="hr"></div>
-      <h2>🏅 Badges</h2>
-      ${renderBadges()}
-    </div>
-  </div>
-  `;
-
-  // bind radios
-  QCM.forEach((q, idx)=>{
-    const name = `q${idx}`;
-    const radios = document.querySelectorAll(`input[name="${name}"]`);
-    radios.forEach(r=>{
-      r.addEventListener("change", ()=>{
-        state.qcmAnswers[idx] = parseInt(r.value,10);
-        saveState();
-      });
-    });
-  });
-
-  document.getElementById("showScore").onclick = ()=>{
-    const s = computeQcmScore();
-    const fb = document.getElementById("qcmFeedback");
-    if(!s.done){
-      fb.innerHTML = `<div class="q"><div class="stem warn">⚠️ Il manque des réponses. Réponds à tout pour valider le QCM.</div></div>`;
-      toast("⚠️ Réponds à toutes les questions !");
-      return;
-    }
-
-    const corrections = QCM.map((q, idx)=>{
-      const chosen = state.qcmAnswers[idx];
-      const ok = chosen===q.answer;
-      return `
-        <div class="q">
-          <div class="stem">${idx+1}. <span class="tag">${escapeHtml(q.cat)}</span> ${escapeHtml(q.stem)}</div>
-          <div class="${ok?'good':'bad'}"><b>${ok?'✔ Correct':'✘ Faux'}</b> — Ta réponse : ${escapeHtml(q.options[chosen])}</div>
-          <div class="small">Correction : ${escapeHtml(q.options[q.answer])}. ${escapeHtml(q.explain)}</div>
-        </div>
-      `;
-    }).join("");
-
-    fb.innerHTML = `
-      <div class="q">
-        <div class="stem">🎯 Résultat : <span class="score">${s.score} / ${s.max}</span></div>
-        <div class="small">Chaque bonne réponse vaut 1 point.</div>
-      </div>
-      ${corrections}
-    `;
-
-    // XP
-    const baseXp = 60;
-    const bonus = (s.score===s.max) ? 40 : 0;
-    addXp(baseXp + Math.floor(s.score*5) + bonus, bonus? "QCM parfait 🎉" : "QCM terminé");
-    checkBadges();
-    render("qcm"); // refresh HUD/badges
-  };
-}
-
-/* =========================================================
-   13) PAGE : ATELIERS (quêtes)
-========================================================= */
-function renderWorkshopBlock(p){
-  const saved = state.workshopScores[p.id];
-  const attempts = state.workshopAttempts[p.id] || 0;
-
-  let fbHtml = `<div class="small">Pas encore corrigé. Écris puis clique “Corriger”.</div>`;
-  if(saved){
-    fbHtml = `
-      <div class="q" id="fb_${p.id}">
-        <div class="stem">🎯 Score : <span class="score">${saved.score} / ${saved.max}</span>
-          <span class="small">(${new Date(saved.ts).toLocaleString()})</span>
-          <span class="tag">Corrections : ${attempts}</span>
-        </div>
-        ${saved.detail.map(d=>`
-          <div class="${d.ok?'good':'bad'}"><b>${d.ok?'✔':'✘'}</b> (${d.pts} pts) — ${escapeHtml(d.why)}</div>
-        `).join("")}
-        <div class="hr"></div>
-        <div class="small">
-          Connecteurs trouvés : ${escapeHtml((saved.analysis.connectorsFound||[]).join(", ") || "—")}<br/>
-          Perception : ${escapeHtml((saved.analysis.perceptionFound||[]).join(", ") || "—")}<br/>
-          Spatial : ${escapeHtml((saved.analysis.spatialFound||[]).join(", ") || "—")}<br/>
-          Verbes de parole : ${escapeHtml((saved.analysis.speechFound||[]).join(", ") || "—")}
-        </div>
-      </div>
-    `;
-  }
-
-  const existing = state.workshopText[p.id] || "";
-
-  return `
-    <div class="q">
-      <div class="stem">${escapeHtml(p.title)} <span class="tag">${p.points} pts</span> <span class="tag">Corrections : ${attempts}</span></div>
-      <div class="muted">${escapeHtml(p.consigne)}</div>
-      <div class="small" style="margin-top:8px;">Critères :</div>
-      <div class="small">${p.rules.map(r=>`<span class="tag">${escapeHtml(r.label)} (${r.pts})</span>`).join(" ")}</div>
-
-      <div style="margin-top:10px;">
-        <textarea id="ta_${p.id}" placeholder="Écris ton texte ici…">${escapeHtml(existing)}</textarea>
-      </div>
-
-      <div class="row" style="margin-top:10px;">
-        <button class="btn primary" id="corr_${p.id}">Corriger & noter</button>
-        <button class="btn secondary" id="hint_${p.id}">Indice</button>
-        <span class="pill">Objectif : améliorer ton score</span>
-      </div>
-
-      <div id="hintbox_${p.id}" style="margin-top:10px;"></div>
-      <div style="margin-top:10px;">${fbHtml}</div>
-    </div>
-  `;
-}
-
-function renderWorkshops(){
-  const lights = skillLightsDetailed();
-  view.innerHTML = `
-  <div class="grid">
-    <div class="card">
-      <h2>✍️ Quêtes d’écriture (corrigées automatiquement)</h2>
-      <p class="muted">
-        Tu écris, puis tu corriges : le score vérifie des critères objectifs (structure, connecteurs, repères…).
-        Ce n’est pas un prof, mais c’est excellent pour réviser la leçon.
-      </p>
-
-      ${renderPointsWidget()}
-
-      <div class="hr"></div>
-
-      <div class="q">
-        <div class="stem">🚦 Feux tricolores</div>
-        <div class="small">
-          ${lights.dialogue.icon} Dialogue : <b>${lights.dialogue.txt}</b> — ${escapeHtml(lights.dialogue.hint)}<br/>
-          ${lights.description.icon} Description : <b>${lights.description.txt}</b> — ${escapeHtml(lights.description.hint)}<br/>
-          ${lights.connecteurs.icon} Connecteurs : <b>${lights.connecteurs.txt}</b> — ${escapeHtml(lights.connecteurs.hint)}<br/>
-          ${lights.poesie.icon} Poésie : <b>${lights.poesie.txt}</b> — ${escapeHtml(lights.poesie.hint)}
-        </div>
-      </div>
-
-      <h3>📖 Textes supports (à étudier)</h3>
-      ${TEXTS.map(t=>`
-        <details>
-          <summary>${escapeHtml(t.title)}</summary>
-          <pre class="mono" style="white-space:pre-wrap; color:#dbe7ff">${escapeHtml(t.body)}</pre>
-        </details>
-      `).join("<div class='hr'></div>")}
-
-      <div class="hr"></div>
-
-      ${PROMPTS.map(p=>renderWorkshopBlock(p)).join("<div class='hr'></div>")}
-    </div>
-
-    <div class="card">
-      <h2>🧪 Boost de score (très simple)</h2>
-      <div class="q">
-        <div class="stem">Trucs qui donnent des points</div>
-        <div class="muted">
-          <b>Dialogue :</b> 8 lignes avec “-” + 2 incises + 3 verbes de parole.<br/>
-          <b>Description :</b> 3 perceptions + 3 repères (à gauche, derrière…) + peu de “il y a/être”.<br/>
-          <b>Connecteurs :</b> 6 connecteurs + “car” + “néanmoins” + “c’est pourquoi”.<br/>
-          <b>Poésie :</b> 2 strophes (ligne vide) + 8 vers + “comme…”.
-        </div>
-      </div>
-
-      <div class="hr"></div>
-      <h2>⏱️ Travail</h2>
-      <div class="pill">Temps actif : <b>${escapeHtml(formatTime(state.timeSpentSec||0))}</b></div>
-      <div class="small" style="margin-top:8px;">
-        Corrections totales : <b>${Object.values(state.workshopAttempts||{}).reduce((a,b)=>a+(b||0),0)}</b>
-      </div>
-
-      <div class="hr"></div>
-      <h2>🏅 Badges</h2>
-      ${renderBadges()}
-    </div>
-  </div>
-  `;
-
-  // bind inputs & buttons
-  PROMPTS.forEach(p=>{
-    const ta = document.getElementById(`ta_${p.id}`);
-    if(ta){
-      ta.addEventListener("input", ()=>{
-        state.workshopText[p.id] = ta.value;
-        saveState();
-      });
-    }
-
-    const hintBtn = document.getElementById(`hint_${p.id}`);
-    if(hintBtn){
-      hintBtn.onclick = ()=>{
-        const lights = skillLightsDetailed();
-        const hint = lights[p.id]?.hint || "Relis la leçon et ajoute ce qui manque.";
-        const box = document.getElementById(`hintbox_${p.id}`);
-        box.innerHTML = `
-          <div class="q">
-            <div class="stem">🧩 Indice</div>
-            <div class="muted">${escapeHtml(hint)}</div>
-          </div>
-        `;
-        addXp(5, "Indice consulté");
-      };
-    }
-
-    const btn = document.getElementById(`corr_${p.id}`);
-    if(btn){
-      btn.onclick = ()=>{
-        const text = (state.workshopText[p.id] || "").trim();
-        if(text.length < 30){
-          toast("⚠️ Écris un peu plus (au moins 2–3 phrases).");
-          return;
-        }
-        const before = state.workshopScores[p.id]?.score ?? null;
-        const res = scoreForPrompt(p.id, text);
-
-        state.workshopScores[p.id] = { ...res, ts: new Date().toISOString() };
-        state.workshopAttempts[p.id] = (state.workshopAttempts[p.id] || 0) + 1;
-        saveState();
-
-        // XP : base + bonus amélioration
-        const base = 35;
-        const improved = (before!==null) ? Math.max(0, res.score - before) : res.score;
-        addXp(base + Math.floor(improved*3), "Quête corrigée");
-
-        checkBadges();
-        render("workshops");
-
-        const fb = document.getElementById(`fb_${p.id}`);
-        if(fb) fb.scrollIntoView({behavior:"smooth", block:"start"});
-      };
-    }
-  });
-}
-
-/* =========================================================
-   14) PAGE : BILAN PARENT + EXPORT + RAPPORT IMPRIMABLE
-========================================================= */
-function download(filename, text, mime){
-  const blob = new Blob([text], {type:mime});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 500);
-}
-
-function makeReportText(){
-  const q = computeQcmScore();
-  const w = computeWorkshopTotal();
-  const g = computeGradeOn20();
-  const lights = skillLightsDetailed();
-  const total = q.score + w.score;
-  const max = q.max + w.max;
-  const attemptsTotal = Object.values(state.workshopAttempts||{}).reduce((a,b)=>a+(b||0),0);
-
-  let out = "";
-  out += `RAPPORT PARENT — Atelier Rédaction 6e\n`;
-  out += `Élève : ${state.name || "(non renseigné)"}\n`;
-  out += `Date : ${new Date().toLocaleString()}\n\n`;
-  out += `QCM : ${q.score}/${q.max}\n`;
-  out += `Ateliers : ${w.score}/${w.max}\n`;
-  out += `TOTAL : ${total}/${max}\n`;
-  out += `NOTE PARENT : ${g.grade}/20 (QCM ${g.qPart}/4 + Ateliers ${g.wPart}/16)\n`;
-  out += `Temps actif : ${formatTime(state.timeSpentSec||0)}\n`;
-  out += `Corrections : ${attemptsTotal}\n\n`;
-  out += `Feux (compétences):\n`;
-  out += `- Dialogue : ${lights.dialogue.icon} ${lights.dialogue.txt} — ${lights.dialogue.hint}\n`;
-  out += `- Description : ${lights.description.icon} ${lights.description.txt} — ${lights.description.hint}\n`;
-  out += `- Connecteurs : ${lights.connecteurs.icon} ${lights.connecteurs.txt} — ${lights.connecteurs.hint}\n`;
-  out += `- Poésie : ${lights.poesie.icon} ${lights.poesie.txt} — ${lights.poesie.hint}\n\n`;
-  out += `Appréciation : ${appreciationFromGrade(g.grade)}\n\n`;
-  out += `Note : la correction automatique vérifie surtout des critères objectifs (structure, connecteurs, indices). Le style/creativité est humain.\n`;
-  return out;
-}
-
-function parentReportHtml(){
-  const q = computeQcmScore();
-  const w = computeWorkshopTotal();
-  const g = computeGradeOn20();
-  const lights = skillLightsDetailed();
-  const total = q.score + w.score;
-  const max = q.max + w.max;
-  const attempts = state.workshopAttempts || {};
-  const timeStr = formatTime(state.timeSpentSec||0);
-
-  function row(title, id){
-    const s = state.workshopScores[id];
-    const a = attempts[id] || 0;
-    const L = lights[id];
-    if(!s) return `<tr><td>${title}</td><td>—</td><td>${a}</td><td>${L.icon} ${L.txt}</td></tr>`;
-    return `<tr><td>${title}</td><td>${s.score} / ${s.max}</td><td>${a}</td><td>${L.icon} ${L.txt}</td></tr>`;
-  }
-
-  return `
-<!doctype html>
-<html lang="fr"><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rapport parent — Rédaction 6e</title>
-<style>
-  body{font-family:Arial, sans-serif; padding:18px; color:#111;}
-  h1{font-size:18px; margin:0 0 6px;}
-  .muted{color:#555; font-size:12px;}
-  .box{border:1px solid #ddd; padding:12px; border-radius:10px; margin:12px 0;}
-  table{border-collapse:collapse; width:100%;}
-  th,td{border:1px solid #ddd; padding:8px; font-size:13px; text-align:left;}
-  th{background:#f5f5f5;}
-  .kpi{display:flex; gap:10px; flex-wrap:wrap;}
-  .kpi div{border:1px solid #ddd; border-radius:10px; padding:10px 12px; min-width:160px;}
-  .big{font-size:16px; font-weight:700;}
-  @media print{ button{display:none;} body{padding:0;} }
-</style>
-</head><body>
-<button onclick="window.print()">Imprimer</button>
-<h1>Rapport parent — Atelier Rédaction 6e</h1>
-<div class="muted">Élève : <b>${(state.name || "Non renseigné")}</b> — Date : ${new Date().toLocaleString()}</div>
-
-<div class="box kpi">
-  <div><div class="muted">QCM</div><div class="big">${q.score} / ${q.max}</div></div>
-  <div><div class="muted">Ateliers</div><div class="big">${w.score} / ${w.max}</div></div>
-  <div><div class="muted">Total</div><div class="big">${total} / ${max}</div></div>
-  <div><div class="muted">Note parent</div><div class="big">${g.grade} / 20</div></div>
-  <div><div class="muted">Temps passé</div><div class="big">${timeStr}</div></div>
-</div>
-
-<div class="box">
-  <h2 style="font-size:15px;margin:0 0 8px;">Appréciation</h2>
-  <div>${appreciationFromGrade(g.grade)}</div>
-</div>
-
-<div class="box">
-  <h2 style="font-size:15px;margin:0 0 8px;">Compétences (feux)</h2>
-  <ul style="margin:0; padding-left:18px; font-size:13px;">
-    <li>${lights.dialogue.icon} Dialogue : <b>${lights.dialogue.txt}</b> — ${lights.dialogue.hint}</li>
-    <li>${lights.description.icon} Description : <b>${lights.description.txt}</b> — ${lights.description.hint}</li>
-    <li>${lights.connecteurs.icon} Connecteurs : <b>${lights.connecteurs.txt}</b> — ${lights.connecteurs.hint}</li>
-    <li>${lights.poesie.icon} Poésie : <b>${lights.poesie.txt}</b> — ${lights.poesie.hint}</li>
-  </ul>
-</div>
-
-<div class="box">
-  <h2 style="font-size:15px;margin:0 0 8px;">Détail quêtes</h2>
-  <table>
-    <thead><tr><th>Quête</th><th>Score</th><th>Corrections</th><th>Niveau</th></tr></thead>
-    <tbody>
-      ${row("Quête 1 — Dialogue", "dialogue")}
-      ${row("Quête 2 — Description", "description")}
-      ${row("Quête 3 — Connecteurs", "connecteurs")}
-      ${row("Quête 4 — Poésie", "poesie")}
-    </tbody>
-  </table>
-</div>
-
-<div class="muted">
-  Note : la correction automatique vérifie surtout des critères objectifs (structure, connecteurs, indices). Le style et la créativité restent à juger humainement.
-</div>
-</body></html>
-  `;
-}
-
-function openParentReport(){
-  const html = parentReportHtml();
-  const w = window.open("", "_blank");
-  if(!w){ alert("Le navigateur a bloqué la fenêtre. Autorise les popups pour imprimer le rapport."); return; }
-  w.document.open(); w.document.write(html); w.document.close();
-}
-
-function renderReport(){
-  const q = computeQcmScore();
-  const w = computeWorkshopTotal();
-  const g = computeGradeOn20();
-  const lights = skillLightsDetailed();
-  const total = q.score + w.score;
-  const max = q.max + w.max;
-  const attemptsTotal = Object.values(state.workshopAttempts||{}).reduce((a,b)=>a+(b||0),0);
-  const timeStr = formatTime(state.timeSpentSec||0);
-
-  view.innerHTML = `
-  <div class="grid">
-    <div class="card">
-      <h2>🏁 Bilan Parent (clair et vérifiable)</h2>
-      <p class="muted">Ici tu as une note sur 20 + les feux + le temps + le nombre de corrections.</p>
-
-      ${renderPointsWidget()}
-
-      <div class="hr"></div>
-
-      <div class="q">
-        <div class="stem">🧾 Note parent : <span class="score">${g.grade} / 20</span></div>
-        <div class="small">Détail : QCM ${g.qPart}/4 + Quêtes ${g.wPart}/16</div>
-        <div class="small"><b>Appréciation :</b> ${escapeHtml(appreciationFromGrade(g.grade))}</div>
-      </div>
-
-      <div class="q">
-        <div class="stem">⏱️ Travail</div>
-        <div class="small">Temps actif : <b>${escapeHtml(timeStr)}</b> — Corrections : <b>${attemptsTotal}</b></div>
-      </div>
-
-      <div class="q">
-        <div class="stem">🚦 Feux (compétences)</div>
-        <div class="small">
-          ${lights.dialogue.icon} Dialogue : <b>${lights.dialogue.txt}</b> — ${escapeHtml(lights.dialogue.hint)}<br/>
-          ${lights.description.icon} Description : <b>${lights.description.txt}</b> — ${escapeHtml(lights.description.hint)}<br/>
-          ${lights.connecteurs.icon} Connecteurs : <b>${lights.connecteurs.txt}</b> — ${escapeHtml(lights.connecteurs.hint)}<br/>
-          ${lights.poesie.icon} Poésie : <b>${lights.poesie.txt}</b> — ${escapeHtml(lights.poesie.hint)}
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="row">
-        <button class="btn primary" id="exportTxt">Exporter rapport (.txt)</button>
-        <button class="btn" id="exportJson">Exporter données (.json)</button>
-        <button class="btn primary" id="parentPrint">Rapport parent (imprimer)</button>
-      </div>
-
-      <div id="exportBox" style="margin-top:12px;"></div>
-    </div>
-
-    <div class="card">
-      <h2>🏅 Badges</h2>
-      ${renderBadges()}
-
-      <div class="hr"></div>
-      <h2>🎁 Bonus ludique</h2>
-      <div class="q">
-        <div class="stem">Récompenses</div>
-        <div class="muted">
-          ✅ QCM terminé : +60 XP<br/>
-          ✨ QCM sans faute : +40 XP<br/>
-          ✍️ Chaque quête corrigée : +35 XP + bonus amélioration<br/>
-          🧩 Indice : +5 XP
-        </div>
-      </div>
-
-      <div class="hr"></div>
-      <h2>📌 Limite honnête</h2>
-      <p class="muted">
-        La note automatique vérifie des indices (structure, mots, connecteurs). Elle ne juge pas la beauté du style.
-        Mais pour réviser la leçon de méthode, c’est très efficace.
-      </p>
-    </div>
-  </div>
-  `;
-
-  document.getElementById("exportTxt").onclick = ()=>{
-    const txt = makeReportText();
-    download("rapport_parent_redaction_6e.txt", txt, "text/plain");
-    document.getElementById("exportBox").innerHTML =
-      `<pre class="mono" style="white-space:pre-wrap">${escapeHtml(txt)}</pre>`;
-    addXp(10, "Rapport exporté");
-  };
-  document.getElementById("exportJson").onclick = ()=>{
-    const data = JSON.stringify(state, null, 2);
-    download("donnees_redaction_6e.json", data, "application/json");
-    document.getElementById("exportBox").innerHTML =
-      `<pre class="mono" style="white-space:pre-wrap">${escapeHtml(data)}</pre>`;
-    addXp(10, "Données exportées");
-  };
-  document.getElementById("parentPrint").onclick = ()=> openParentReport();
-}
-
-/* =========================================================
-   15) INIT
-========================================================= */
-updateHeaderHUD();
-checkBadges();
-render(currentTab);
-</script>
-</body>
-</html>
+    id:"gnp2",
+    theme:"Expansions du nom",
