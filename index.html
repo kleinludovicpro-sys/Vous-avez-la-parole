@@ -132,10 +132,10 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>Évaluation Français 6e – Phrase & GN (module complet)</h1>
+      <h1>Évaluation Français 6e – Phrase & GN</h1>
       <p class="sub">
-        Tu peux <b>coller tes textes</b> (ceux des photos) en <span class="kbd">Mode Prof</span>, puis faire l’évaluation avec ton fils.
-        Il y a du QCM, de la <b>recopie</b>, de la <b>reconstruction</b>, du <b>texte à trous</b>, du <b>repérage dans le texte</b> et de l’<b>écriture libre</b>.
+        Tu peux <b>coller tes textes</b> en <span class="kbd">Mode Prof</span>.
+        Exercices : QCM, recopie, texte à trous, sélection et écriture.
       </p>
     </div>
     <div class="pill" id="pill">Mode élève</div>
@@ -148,24 +148,17 @@
 
   <div class="row" style="margin-top:12px">
     <button class="btn secondary" id="btnRestart">Recommencer</button>
-    <button class="btn ghost" id="btnExport">Exporter le bilan (texte)</button>
+    <button class="btn ghost" id="btnExport">Exporter le bilan</button>
     <button class="btn ghost" id="btnClear">Effacer sauvegarde</button>
   </div>
 </div>
 
 <script>
 /* =========================================================
-   0) DONNÉES – À PERSONNALISER EN MODE PROF
+   0) DONNÉES
    ========================================================= */
-
-/**
- * IMPORTANT :
- * - Tu colles tes textes (depuis les photos) dans "textes".
- * - Tu peux créer/éditer les exercices dans "exos".
- * - Tout est modifiable via le Mode Prof dans l'interface.
- */
 const DEFAULT_DATA = {
-  profCode: "64", // petit code simple pour éviter les clics accidentels
+  profCode: "64",
   textes: [
     {
       id:"T1",
@@ -178,138 +171,86 @@ const DEFAULT_DATA = {
       contenu:"COLLE ICI TON TEXTE 2..."
     }
   ],
-
-  // Banque d'exercices (tu peux en ajouter autant que tu veux)
   exos: [
-    // QCM
     {
-      id:"E1",
-      type:"mcq",
-      niveau:"facile",
-      titre:"Ponctuation",
-      texteId:"T1",
-      consigne:"Choisis la bonne réponse.",
-      prompt:"Une phrase se termine généralement par…",
+      id:"E1", type:"mcq", niveau:"facile", titre:"Ponctuation", texteId:"T1",
+      consigne:"Choisis la bonne réponse.", prompt:"Une phrase se termine généralement par…",
       options:["une virgule", "un point / ? / !", "des guillemets", "des parenthèses"],
-      answerIndex:1,
-      explain:"La ponctuation forte en fin de phrase : point, point d’interrogation, point d’exclamation."
+      answerIndex:1, explain:"La ponctuation forte : point, point d’interrogation, point d’exclamation."
     },
-
-    // Trouver dans le texte (sélection)
     {
-      id:"E2",
-      type:"select_in_text",
-      niveau:"moyen",
-      titre:"Repérer un GN",
-      texteId:"T1",
+      id:"E2", type:"select_in_text", niveau:"moyen", titre:"Repérer un GN", texteId:"T1",
       consigne:"Dans le texte, clique exactement sur le groupe nominal demandé.",
-      prompt:"Clique sur un groupe nominal (déterminant + nom) qui désigne un objet.",
-      // ici on met des réponses attendues sous forme de chaînes normalisées (sans ponctuation superflue)
+      prompt:"Clique sur un groupe nominal (déterminant + nom).",
       expectedSelections:["le train","un crayon","la porte"],
-      explain:"Un GN minimal = déterminant + nom. Si tu cliques 'le train', c'est un GN."
+      explain:"Un GN minimal = déterminant + nom."
     },
-
-    // Recopie (vérification automatique)
     {
-      id:"E3",
-      type:"copy",
-      niveau:"moyen",
-      titre:"Recopie sans erreur",
-      texteId:"T1",
+      id:"E3", type:"copy", niveau:"moyen", titre:"Recopie sans erreur", texteId:"T1",
       consigne:"Recopie exactement la phrase ci-dessous.",
-      prompt:"Recopie : « COLLE ICI UNE PHRASE DU TEXTE 1 »",
-      expected:"COLLE ICI UNE PHRASE DU TEXTE 1",
+      prompt:"Recopie : « COLLE ICI UNE PHRASE DU TEXTE 1 »", expected:"COLLE ICI UNE PHRASE DU TEXTE 1",
       explain:"On vérifie : majuscules, accents, apostrophes, espaces et ponctuation."
     },
-
-    // Reconstruction (drag & drop)
     {
-      id:"E4",
-      type:"rebuild",
-      niveau:"moyen",
-      titre:"Reconstituer la phrase",
-      texteId:"T1",
+      id:"E4", type:"rebuild", niveau:"moyen", titre:"Reconstituer la phrase", texteId:"T1",
       consigne:"Remets les morceaux dans l’ordre pour reconstruire la phrase.",
       pieces:["dans la forêt","Le petit loup","avance","silencieusement"],
-      // phrase correcte attendue (normalisée)
       expected:"Le petit loup avance silencieusement dans la forêt",
-      explain:"On cherche : sujet + verbe + compléments dans un ordre logique."
+      explain:"Sujet + verbe + compléments."
     },
-
-    // Texte à trous
     {
-      id:"E5",
-      type:"cloze",
-      niveau:"difficile",
-      titre:"Expansions du nom",
-      texteId:"T1",
+      id:"E5", type:"cloze", niveau:"difficile", titre:"Expansions du nom", texteId:"T1",
       consigne:"Complète les trous avec les bons mots.",
       prompt:"Complète : « Le ____ (nom) ____ (adjectif) de ____ (complément du nom) »",
       blanks:[
-        {id:"b1", accept:[/chien/i,/loup/i,/garçon/i], hint:"un nom"},
-        {id:"b2", accept:[/noir/i,/rapide/i,/grand/i], hint:"un adjectif"},
-        {id:"b3", accept:[/la\s+nuit/i,/la\s+ville/i,/la\s+montagne/i], hint:"de + GN"}
+        {id:"b1", accept:["chien","loup","garçon"], hint:"un nom"},
+        {id:"b2", accept:["noir","rapide","grand"], hint:"un adjectif"},
+        {id:"b3", accept:["la nuit","la ville","la montagne"], hint:"de + GN"}
       ],
       explain:"Expansions du nom : adjectif épithète, complément du nom (de + GN), relative."
     },
-
-    // Écriture libre guidée
     {
-      id:"E6",
-      type:"free_write",
-      niveau:"difficile",
-      titre:"Écriture libre",
-      texteId:"T2",
+      id:"E6", type:"free_write", niveau:"difficile", titre:"Écriture libre", texteId:"T2",
       consigne:"Écris 3 phrases correctes.",
-      prompt:"Écris 3 phrases qui reprennent le thème du texte. Contraintes :\n- 1 phrase interrogative\n- 1 GN avec adjectif épithète\n- 1 GN avec complément du nom (de + GN)\n(Ex : 'la cabane mystérieuse' / 'la cabane de mon cousin')",
-      rubric:{
-        minSentences:3,
-        mustHaveQuestion:true,
-        mustHaveAdj:true,
-        mustHaveDeGN:true,
-        keywords:["cabane","forêt","mystérieux"], // facultatif : mots attendus (tu adaptes à tes textes)
-      },
-      explain:"On vérifie la variété des phrases et la présence d’expansions du nom."
+      prompt:"Écris 3 phrases qui reprennent le thème du texte. Contraintes :\n- 1 phrase interrogative\n- 1 GN avec adjectif épithète\n- 1 GN avec complément du nom",
+      rubric:{ minSentences:3, mustHaveQuestion:true, mustHaveAdj:true, mustHaveDeGN:true, keywords:["cabane","forêt"] },
+      explain:"On vérifie la variété des phrases et la présence d’expansions."
     }
   ]
 };
 
 /* =========================================================
-   1) OUTILS
+   1) OUTILS & SAUVEGARDE SÉCURISÉE
    ========================================================= */
 const LS_KEY = "fr6_module_data_v1";
 const LS_PROGRESS = "fr6_module_progress_v1";
 
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+function getLS(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+function setLS(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+function rmLS(k){ try{localStorage.removeItem(k);}catch(e){} }
+
 function normalize(s){
-  return (s||"")
-    .toLowerCase()
-    .replace(/[’']/g,"'")
-    .replace(/\s+/g," ")
-    .trim()
-    .replace(/[«»"]/g,"")
-    .replace(/[.,;:!?]/g,"")
-    .trim();
+  return (s||"").toLowerCase().replace(/[’']/g,"'").replace(/\s+/g," ").trim().replace(/[«»"]/g,"").replace(/[.,;:!?]/g,"").trim();
 }
 function nowISO(){ return new Date().toISOString(); }
 
 function loadData(){
-  const raw = localStorage.getItem(LS_KEY);
+  const raw = getLS(LS_KEY);
   if(!raw) return deepClone(DEFAULT_DATA);
   try{
     const parsed = JSON.parse(raw);
-    // fallback sécurité
     return {
       profCode: parsed.profCode || DEFAULT_DATA.profCode,
       textes: Array.isArray(parsed.textes) ? parsed.textes : deepClone(DEFAULT_DATA.textes),
       exos: Array.isArray(parsed.exos) ? parsed.exos : deepClone(DEFAULT_DATA.exos),
     };
-  } catch { return deepClone(DEFAULT_DATA); }
+  } catch(e) { return deepClone(DEFAULT_DATA); }
 }
-function saveData(data){ localStorage.setItem(LS_KEY, JSON.stringify(data)); }
+function saveData(data){ setLS(LS_KEY, JSON.stringify(data)); }
 
 function loadProgress(){
-  const raw = localStorage.getItem(LS_PROGRESS);
+  const raw = getLS(LS_PROGRESS);
   if(!raw) return { startedAt: nowISO(), idx:0, answers:{}, log:[] };
   try{
     const p = JSON.parse(raw);
@@ -319,9 +260,9 @@ function loadProgress(){
       answers: p.answers || {},
       log: Array.isArray(p.log) ? p.log : []
     };
-  } catch { return { startedAt: nowISO(), idx:0, answers:{}, log:[] }; }
+  } catch(e) { return { startedAt: nowISO(), idx:0, answers:{}, log:[] }; }
 }
-function saveProgress(p){ localStorage.setItem(LS_PROGRESS, JSON.stringify(p)); }
+function saveProgress(p){ setLS(LS_PROGRESS, JSON.stringify(p)); }
 
 function shuffle(arr){
   const a = arr.slice();
@@ -332,20 +273,10 @@ function shuffle(arr){
   return a;
 }
 
-function countSentences(text){
-  // approximatif pour 6e : on compte . ? !
-  const m = (text||"").match(/[.!?]+/g);
-  return m ? m.length : 0;
-}
+function countSentences(text){ const m = (text||"").match(/[.!?]+/g); return m ? m.length : 0; }
 function hasQuestion(text){ return /\?/.test(text||""); }
-function hasAdjLike(text){
-  // heuristique simple: présence d'un adjectif après un nom fréquent / ou mot finissant en -e/-s/-x etc : pas fiable à 100%
-  // En mode prof, tu peux plutôt évaluer à l'œil : on donne un indicateur.
-  return /\b(une|un|des|le|la|les)\s+\w+\s+\w+/i.test(text||"");
-}
-function hasDeGN(text){
-  return /\bde\s+(le|la|l'|les|mon|ma|mes|ton|ta|tes|son|sa|ses|notre|nos|votre|vos|leur|leurs|\w+)/i.test(text||"");
-}
+function hasAdjLike(text){ return /\b(une|un|des|le|la|les)\s+\w+\s+\w+/i.test(text||""); }
+function hasDeGN(text){ return /\bde\s+(le|la|l'|les|mon|ma|mes|ton|ta|tes|son|sa|ses|notre|nos|votre|vos|leur|leurs|\w+)/i.test(text||""); }
 function includesKeywords(text, keywords){
   if(!keywords || !keywords.length) return true;
   const n = (text||"").toLowerCase();
@@ -357,8 +288,8 @@ function includesKeywords(text, keywords){
    ========================================================= */
 let DATA = loadData();
 let PROG = loadProgress();
-let MODE = "eleve"; // eleve | prof
-let ORDER = DATA.exos.map(e=>e.id); // ordre courant
+let MODE = "eleve";
+let ORDER = DATA.exos.map(e=>e.id);
 
 function getExoById(id){ return DATA.exos.find(e=>e.id===id); }
 function getTexteById(id){ return DATA.textes.find(t=>t.id===id); }
@@ -388,7 +319,7 @@ function renderSide(){
   const total = ORDER.length;
   const answered = Object.keys(PROG.answers||{}).length;
   const score = computeScore();
-  const pct = total ? Math.round((score.points/score.maxPoints)*100) : 0;
+  const pct = (total && score.maxPoints) ? Math.round((score.points/score.maxPoints)*100) : 0;
 
   const exo = currentExo();
   const texte = exo ? getTexteById(exo.texteId) : null;
@@ -405,42 +336,33 @@ function renderSide(){
       <div class="box"><div class="v">${pct}%</div><div class="l">Réussite</div></div>
       <div class="box"><div class="v">${PROG.idx+1}/${total}</div><div class="l">Exercice</div></div>
     </div>
-
     <div class="hr"></div>
     <p class="title2">Texte support</p>
     <p class="muted small">${texte ? (texte.titre + " (" + texte.id + ")") : "—"}</p>
     <div class="textBox" id="textBox">${texte ? escapeHTML(texte.contenu).replace(/\n/g,"<br>") : "Aucun texte sélectionné."}</div>
-
     <div class="hr"></div>
     <details>
       <summary>Bilan détaillé</summary>
-      <div class="list" style="margin-top:10px">
-        ${renderLog()}
-      </div>
+      <div class="list" style="margin-top:10px">${renderLog()}</div>
     </details>
-
     <div class="hr"></div>
     <div class="row">
       <button class="btn secondary" id="btnPrev" ${PROG.idx<=0?"disabled":""}>← Précédent</button>
       <button class="btn" id="btnNext" ${PROG.idx>=ORDER.length-1?"disabled":""}>Suivant →</button>
     </div>
-
     <div class="hr"></div>
     <div class="row">
       <button class="btn ghost" id="btnMode">${MODE==="prof"?"Passer en élève":"Mode prof"}</button>
     </div>
   `;
 
-  // Nav
   const btnPrev = document.getElementById("btnPrev");
   const btnNext = document.getElementById("btnNext");
-  btnPrev?.addEventListener("click", ()=>{ PROG.idx = Math.max(0, PROG.idx-1); saveProgress(PROG); render(); });
-  btnNext?.addEventListener("click", ()=>{ PROG.idx = Math.min(ORDER.length-1, PROG.idx+1); saveProgress(PROG); render(); });
+  if(btnPrev) btnPrev.addEventListener("click", ()=>{ PROG.idx = Math.max(0, PROG.idx-1); saveProgress(PROG); render(); });
+  if(btnNext) btnNext.addEventListener("click", ()=>{ PROG.idx = Math.min(ORDER.length-1, PROG.idx+1); saveProgress(PROG); render(); });
 
-  // Mode
   document.getElementById("btnMode").addEventListener("click", ()=>{
     if(MODE==="prof"){ MODE="eleve"; render(); return; }
-    // Demande code
     const code = prompt("Code prof ?");
     if(code === DATA.profCode){ MODE="prof"; render(); }
     else alert("Code incorrect.");
@@ -460,10 +382,7 @@ function renderLog(){
 
 function renderEleve(){
   const exo = currentExo();
-  if(!exo){
-    main.innerHTML = `<p class="title2">Aucun exercice.</p>`;
-    return;
-  }
+  if(!exo){ main.innerHTML = `<p class="title2">Aucun exercice.</p>`; return; }
 
   const already = PROG.answers[exo.id];
   const texte = getTexteById(exo.texteId);
@@ -477,60 +396,42 @@ function renderEleve(){
         </div>
         <div class="badge">${escapeHTML(exo.texteId || "—")}</div>
       </div>
-
       <div class="hr"></div>
-
       <div class="muted"><b>Consigne :</b> ${escapeHTML(exo.consigne||"")}</div>
       <div class="prompt">${escapeHTML(exo.prompt||"").replace(/\n/g,"<br>")}</div>
-
       <div id="taskBody"></div>
-
       <div class="row" style="margin-top:10px">
         <button class="btn" id="btnValidate">${already ? "Revalider" : "Valider"}</button>
         <button class="btn secondary" id="btnShowText">Afficher/masquer le texte</button>
       </div>
-
       <div id="fb"></div>
     </div>
-
-    <div class="hr"></div>
-    <p class="muted small">
-      Astuce : on peut faire <b>ensemble</b>. Tu laisses ton fils répondre, puis vous lisez l’explication.
-    </p>
   `;
 
   document.getElementById("btnShowText").addEventListener("click", ()=>{
     const box = document.getElementById("textBox");
-    box.style.display = (box.style.display==="none" ? "block" : "none");
+    if(box) box.style.display = (box.style.display==="none" ? "block" : "none");
   });
 
   renderTaskBody(exo, texte);
 
-  document.getElementById("btnValidate").addEventListener("click", ()=>{
-    validate(exo);
-  });
+  document.getElementById("btnValidate").addEventListener("click", ()=>{ validate(exo); });
 
-  // Si déjà répondu, affiche feedback
-  if(already){
-    showFeedback(already.ok, already.message, exo.explain);
-  }
+  if(already){ showFeedback(already.ok, already.message, exo.explain); }
 }
 
 function renderTaskBody(exo, texte){
   const body = document.getElementById("taskBody");
-  const saved = PROG.answers[exo.id]?.value;
+  const saved = PROG.answers[exo.id] ? PROG.answers[exo.id].value : null;
 
   if(exo.type==="mcq"){
-    body.innerHTML = `
-      <div class="opts">
-        ${exo.options.map((opt,i)=>`
-          <label class="opt">
-            <input type="radio" name="mcq" value="${i}" ${String(saved)===String(i)?"checked":""}/>
-            <div>${escapeHTML(opt)}</div>
-          </label>
-        `).join("")}
-      </div>
-    `;
+    body.innerHTML = `<div class="opts">` + 
+      exo.options.map((opt,i)=>`
+        <label class="opt">
+          <input type="radio" name="mcq" value="${i}" ${String(saved)===String(i)?"checked":""}/>
+          <div>${escapeHTML(opt)}</div>
+        </label>
+      `).join("") + `</div>`;
     return;
   }
 
@@ -540,53 +441,33 @@ function renderTaskBody(exo, texte){
         <label class="muted small">Ta copie :</label>
         <textarea id="copyInput" placeholder="Recopie ici…">${saved?escapeHTML(saved):""}</textarea>
         <div class="muted small">On compare avec la phrase attendue (accents/ponctuation/espaces inclus).</div>
-      </div>
-    `;
+      </div>`;
     return;
   }
 
   if(exo.type==="rebuild"){
     const pieces = exo.pieces || [];
-    // ordre initial : mélangé, mais stable si déjà répondu
     const initial = (saved && saved.bank && saved.zone) ? saved : null;
     const bankPieces = initial ? initial.bank : shuffle(pieces);
     const zonePieces = initial ? initial.zone : [];
 
     body.innerHTML = `
       <div class="split">
-        <div>
-          <p class="muted small"><b>Banque</b> (glisse vers la zone)</p>
-          <div class="bank" id="bank"></div>
-        </div>
-        <div>
-          <p class="muted small"><b>Zone</b> (mets dans l’ordre)</p>
-          <div class="zone" id="zone"></div>
-        </div>
-      </div>
-      <p class="muted small">Tu peux aussi cliquer une pastille pour la déplacer.</p>
-    `;
-
+        <div><p class="muted small"><b>Banque</b> (glisse vers la zone)</p><div class="bank" id="bank"></div></div>
+        <div><p class="muted small"><b>Zone</b> (mets dans l’ordre)</p><div class="zone" id="zone"></div></div>
+      </div>`;
     const bank = document.getElementById("bank");
     const zone = document.getElementById("zone");
 
     function makePiece(txt){
       const el = document.createElement("div");
-      el.className = "piece";
-      el.textContent = txt;
-      el.draggable = true;
-
+      el.className = "piece"; el.textContent = txt; el.draggable = true;
       el.addEventListener("dragstart", (e)=>{
-        e.dataTransfer.setData("text/plain", txt);
-        e.dataTransfer.effectAllowed = "move";
-        el.dataset.dragging = "1";
+        e.dataTransfer.setData("text/plain", txt); e.dataTransfer.effectAllowed = "move"; el.dataset.dragging = "1";
       });
-      el.addEventListener("dragend", ()=>{
-        delete el.dataset.dragging;
-      });
+      el.addEventListener("dragend", ()=>{ delete el.dataset.dragging; });
       el.addEventListener("click", ()=>{
-        // clic = bascule banque<->zone
-        if(el.parentElement.id==="bank"){ zone.appendChild(el); }
-        else{ bank.appendChild(el); }
+        if(el.parentElement.id==="bank"){ zone.appendChild(el); } else{ bank.appendChild(el); }
       });
       return el;
     }
@@ -594,20 +475,14 @@ function renderTaskBody(exo, texte){
     function allowDrop(container){
       container.addEventListener("dragover", (e)=>{ e.preventDefault(); });
       container.addEventListener("drop", (e)=>{
-        e.preventDefault();
-        const txt = e.dataTransfer.getData("text/plain");
-        // trouve l'élément dragging
+        e.preventDefault(); const txt = e.dataTransfer.getData("text/plain");
         const dragging = document.querySelector('.piece[data-dragging="1"]');
-        if(dragging && dragging.textContent===txt){
-          container.appendChild(dragging);
-        }
+        if(dragging && dragging.textContent===txt){ container.appendChild(dragging); }
       });
     }
     allowDrop(bank); allowDrop(zone);
-
     bankPieces.forEach(t=> bank.appendChild(makePiece(t)));
     zonePieces.forEach(t=> zone.appendChild(makePiece(t)));
-
     return;
   }
 
@@ -615,21 +490,18 @@ function renderTaskBody(exo, texte){
     const blanks = exo.blanks || [];
     body.innerHTML = `
       <div class="inputWrap">
-        ${(blanks).map((b,idx)=>`
+        ${blanks.map((b,idx)=>`
           <div>
             <label class="muted small">Trou ${idx+1} <span class="muted">(${escapeHTML(b.hint||"")})</span></label>
-            <input type="text" id="blank_${b.id}" placeholder="Réponse…" value="${saved?.[b.id]?escapeHTML(saved[b.id]):""}"/>
+            <input type="text" id="blank_${b.id}" placeholder="Réponse…" value="${(saved && saved[b.id])?escapeHTML(saved[b.id]):""}"/>
           </div>
         `).join("")}
-      </div>
-      <p class="muted small">Astuce : orthographe tolérée si proche (accents/apostrophes normalisés).</p>
-    `;
+      </div>`;
     return;
   }
 
   if(exo.type==="select_in_text"){
-    // On affiche le texte du côté droit, et on rend sélectionnable dans une copie ici (pour éviter de casser le panneau)
-    const content = (texte?.contenu || "");
+    const content = (texte && texte.contenu) ? texte.contenu : "";
     const tokens = tokenizeForSelection(content);
 
     body.innerHTML = `
@@ -638,8 +510,7 @@ function renderTaskBody(exo, texte){
       <div class="row" style="margin-top:10px">
         <div class="chip">Sélection : <b id="selOut">—</b></div>
         <button class="btn secondary" id="btnClearSel">Effacer sélection</button>
-      </div>
-    `;
+      </div>`;
 
     const selectBox = document.getElementById("selectBox");
     const selOut = document.getElementById("selOut");
@@ -648,19 +519,16 @@ function renderTaskBody(exo, texte){
     function updateSel(){
       const words = [];
       [...selectedIdx].sort((a,b)=>a-b).forEach(i=>{
-        const t = tokens[i]?.t || "";
+        const t = tokens[i] ? tokens[i].t : "";
         if(t.trim()) words.push(t);
       });
       const selText = words.join("");
       selOut.textContent = selText.trim() ? selText.trim() : "—";
-      // save in DOM for validate
       selectBox.dataset.selection = selText.trim();
     }
 
     tokens.forEach((tok, i)=>{
-      const span = document.createElement("span");
-      span.className = "word";
-      span.textContent = tok.t;
+      const span = document.createElement("span"); span.className = "word"; span.textContent = tok.t;
       if(tok.isSpace) span.style.cursor = "default";
       span.addEventListener("click", ()=>{
         if(tok.isSpace) return;
@@ -677,13 +545,8 @@ function renderTaskBody(exo, texte){
       updateSel();
     });
 
-    // restore saved
-    if(saved){
-      // on ne re-sélectionne pas mot par mot (complexe), mais on affiche
-      selectBox.dataset.selection = saved;
-      selOut.textContent = saved;
-    } else updateSel();
-
+    if(saved){ selectBox.dataset.selection = saved; selOut.textContent = saved; } 
+    else { updateSel(); }
     return;
   }
 
@@ -692,18 +555,13 @@ function renderTaskBody(exo, texte){
       <div class="inputWrap">
         <label class="muted small">Ta réponse (écriture libre) :</label>
         <textarea id="freeInput" placeholder="Écris ici…">${saved?escapeHTML(saved):""}</textarea>
-        <div class="muted small">
-          Indicateurs automatiques : nombre de phrases, présence de ?, présence de “de + GN”, etc.
-          (Ça aide, mais toi tu peux corriger à l’œil.)
-        </div>
       </div>
       <div class="kpi">
         <div class="box"><div class="v" id="m_sent">0</div><div class="l">Phrases</div></div>
         <div class="box"><div class="v" id="m_q">—</div><div class="l">Interrogative ?</div></div>
         <div class="box"><div class="v" id="m_de">—</div><div class="l">“de + GN”</div></div>
         <div class="box"><div class="v" id="m_kw">—</div><div class="l">Mots-clés</div></div>
-      </div>
-    `;
+      </div>`;
 
     const input = document.getElementById("freeInput");
     const rub = exo.rubric || {};
@@ -718,12 +576,11 @@ function renderTaskBody(exo, texte){
     updateMetrics();
     return;
   }
-
-  body.innerHTML = `<p class="muted">Type d’exercice non reconnu : ${escapeHTML(exo.type)}</p>`;
 }
 
 function showFeedback(ok, message, explain){
   const fb = document.getElementById("fb");
+  if(!fb) return;
   fb.innerHTML = `
     <div class="feedback ${ok?"ok":"ko"}">
       <p class="fbTitle">${ok ? "✅ Correct" : "❌ À revoir"}</p>
@@ -743,33 +600,21 @@ function validate(exo){
     const checked = document.querySelector('input[name="mcq"]:checked');
     const v = checked ? Number(checked.value) : null;
     res.value = v;
-    if(v===null){
-      res.message = "Choisis une réponse.";
-    } else if(v === exo.answerIndex){
-      res.ok = true; res.points = 1;
-      res.message = "Bonne réponse.";
-    } else {
-      res.message = `Mauvaise réponse.`;
-    }
+    if(v===null){ res.message = "Choisis une réponse."; } 
+    else if(v === exo.answerIndex){ res.ok = true; res.points = 1; res.message = "Bonne réponse."; } 
+    else { res.message = "Mauvaise réponse."; }
   }
 
   if(exo.type==="copy"){
-    const inp = (document.getElementById("copyInput")?.value || "");
+    const inpEl = document.getElementById("copyInput");
+    const inp = inpEl ? inpEl.value : "";
     res.value = inp;
     const expected = (exo.expected || "");
-    // comparaison stricte (espaces normalisés)
     const a = inp.replace(/\s+/g," ").trim();
     const b = expected.replace(/\s+/g," ").trim();
-    if(!a){
-      res.message = "Recopie la phrase.";
-    } else if(a === b){
-      res.ok = true; res.points = 1;
-      res.message = "Recopie parfaite.";
-    } else {
-      // donner un retour utile : compter différences basiques
-      const diff = diffScore(a,b);
-      res.message = `Il y a des différences (${diff} zone(s) différente(s)). Recompare les accents, apostrophes, espaces et la ponctuation.`;
-    }
+    if(!a){ res.message = "Recopie la phrase."; } 
+    else if(a === b){ res.ok = true; res.points = 1; res.message = "Recopie parfaite."; } 
+    else { const diff = diffScore(a,b); res.message = `Il y a des différences (${diff} zone(s)). Recompare les accents et la ponctuation.`; }
   }
 
   if(exo.type==="rebuild"){
@@ -778,56 +623,45 @@ function validate(exo){
     res.value = { bank, zone };
     const built = zone.join(" ").replace(/\s+/g," ").trim();
     const expected = (exo.expected||"").replace(/\s+/g," ").trim();
-    if(zone.length === 0){
-      res.message = "Glisse des morceaux dans la zone.";
-    } else if(built === expected){
-      res.ok = true; res.points = 1;
-      res.message = "Phrase reconstruite correctement.";
-    } else {
-      res.message = "L’ordre n’est pas encore correct. Relis : sujet → verbe → compléments.";
-    }
+    if(zone.length === 0){ res.message = "Glisse des morceaux dans la zone."; } 
+    else if(built === expected){ res.ok = true; res.points = 1; res.message = "Phrase reconstruite correctement."; } 
+    else { res.message = "L’ordre n’est pas encore correct."; }
   }
 
   if(exo.type==="cloze"){
-    const out = {};
-    let okAll = true;
+    const out = {}; let okAll = true;
     for(const b of (exo.blanks||[])){
-      const v = (document.getElementById(`blank_${b.id}`)?.value || "").trim();
+      const inputEl = document.getElementById("blank_" + b.id);
+      const v = inputEl ? inputEl.value.trim() : "";
       out[b.id] = v;
       const n = normalize(v);
-      const accepts = (b.accept||[]).some(r => r.test(v) || r.test(n));
+      const accepts = (b.accept||[]).some(str => {
+        try { const r = new RegExp(str, "i"); return r.test(v) || r.test(n); } catch(e) { return false; }
+      });
       if(!v || !accepts) okAll = false;
     }
     res.value = out;
-    if(Object.values(out).every(v=>!v)){
-      res.message = "Complète les trous.";
-    } else if(okAll){
-      res.ok = true; res.points = 1;
-      res.message = "Tous les trous sont corrects.";
-    } else {
-      res.message = "Un ou plusieurs trous sont à corriger.";
-    }
+    if(Object.values(out).every(v=>!v)){ res.message = "Complète les trous."; } 
+    else if(okAll){ res.ok = true; res.points = 1; res.message = "Tous les trous sont corrects."; } 
+    else { res.message = "Un ou plusieurs trous sont à corriger."; }
   }
 
   if(exo.type==="select_in_text"){
-    const sel = document.getElementById("selectBox")?.dataset?.selection || "";
+    const selBox = document.getElementById("selectBox");
+    const sel = (selBox && selBox.dataset) ? selBox.dataset.selection : "";
     res.value = sel;
     const nsel = normalize(sel);
-    if(!sel || !sel.trim()){
-      res.message = "Clique des mots pour faire une sélection.";
-    } else {
+    if(!sel || !sel.trim()){ res.message = "Clique des mots pour faire une sélection."; } 
+    else {
       const ok = (exo.expectedSelections||[]).some(x => normalize(x) === nsel);
-      if(ok){
-        res.ok = true; res.points = 1;
-        res.message = `Sélection acceptée : “${sel.trim()}”.`;
-      } else {
-        res.message = `Sélection non attendue : “${sel.trim()}”. Essaie un autre GN.`;
-      }
+      if(ok){ res.ok = true; res.points = 1; res.message = `Sélection acceptée : “${sel.trim()}”.`; } 
+      else { res.message = `Sélection non attendue : “${sel.trim()}”. Essaie un autre GN.`; }
     }
   }
 
   if(exo.type==="free_write"){
-    const text = (document.getElementById("freeInput")?.value || "");
+    const freeInp = document.getElementById("freeInput");
+    const text = freeInp ? freeInp.value : "";
     res.value = text;
     const rub = exo.rubric || {};
     const sent = countSentences(text);
@@ -838,38 +672,13 @@ function validate(exo){
     const cond5 = !rub.keywords || !rub.keywords.length || includesKeywords(text, rub.keywords);
 
     const ok = cond1 && cond2 && cond3 && cond4 && cond5;
-    if(!text.trim()){
-      res.message = "Écris ta réponse.";
-    } else if(ok){
-      res.ok = true; res.points = 1;
-      res.message = "Les contraintes principales semblent respectées (à valider à l’œil).";
-    } else {
-      const misses = [];
-      if(!cond1) misses.push(`au moins ${rub.minSentences||1} phrase(s)`);
-      if(!cond2) misses.push("une phrase interrogative (?)");
-      if(!cond4) misses.push("un 'de + GN' (complément du nom)");
-      if(!cond5) misses.push("un mot-clé du thème");
-      if(!cond3) misses.push("un GN avec adjectif (à vérifier)");
-      res.message = "À améliorer : " + misses.join(", ") + ".";
-    }
+    if(!text.trim()){ res.message = "Écris ta réponse."; } 
+    else if(ok){ res.ok = true; res.points = 1; res.message = "Les contraintes semblent respectées."; } 
+    else { res.message = "Il manque certains éléments demandés."; }
   }
 
-  // Sauvegarde + log
-  PROG.answers[exo.id] = {
-    ok: res.ok,
-    value: res.value,
-    points: res.points,
-    max: res.max,
-    message: res.message
-  };
-  PROG.log.push({
-    at: nowISO(),
-    id: exo.id,
-    titre: exo.titre,
-    type: exo.type,
-    ok: res.ok,
-    detail: res.message
-  });
+  PROG.answers[exo.id] = { ok: res.ok, value: res.value, points: res.points, max: res.max, message: res.message };
+  PROG.log.push({ at: nowISO(), id: exo.id, titre: exo.titre, type: exo.type, ok: res.ok, detail: res.message });
   saveProgress(PROG);
 
   showFeedback(res.ok, res.message, exo.explain);
@@ -889,41 +698,29 @@ function computeScore(){
 }
 
 /* =========================================================
-   5) MODE PROF – ÉDITION
+   5) MODE PROF
    ========================================================= */
 function renderProf(){
   main.innerHTML = `
     <p class="title2">Mode prof – Personnalisation</p>
-    <p class="muted small">
-      1) Colle tes textes (depuis les photos). 2) Édite les exercices ou ajoute-en. 3) Repasse en mode élève.
-    </p>
     <div class="hr"></div>
-
     <div class="grid">
       <div class="task">
         <div class="taskTop">
-          <div>
-            <div class="taskName">Textes (supports)</div>
-            <div class="muted small">Tu peux ajouter plusieurs textes. Chaque exercice pointe vers un texteId.</div>
-          </div>
-          <button class="btn secondary" id="addText">+ Ajouter un texte</button>
+          <div class="taskName">Textes (supports)</div>
+          <button class="btn secondary" id="addText">+ Ajouter</button>
         </div>
         <div class="hr"></div>
         <div id="textsEditor"></div>
       </div>
-
       <div class="task">
         <div class="taskTop">
-          <div>
-            <div class="taskName">Exercices</div>
-            <div class="muted small">Ajoute des exercices variés : mcq, select_in_text, copy, rebuild, cloze, free_write</div>
-          </div>
-          <button class="btn secondary" id="addExo">+ Ajouter un exercice</button>
+          <div class="taskName">Exercices</div>
+          <button class="btn secondary" id="addExo">+ Ajouter</button>
         </div>
         <div class="hr"></div>
         <div id="exosEditor"></div>
       </div>
-
       <div class="row">
         <button class="btn" id="saveProf">Enregistrer</button>
         <button class="btn secondary" id="exitProf">Retour mode élève</button>
@@ -931,79 +728,51 @@ function renderProf(){
     </div>
   `;
 
-  // Textes editor
-  const te = document.getElementById("textsEditor");
-  te.innerHTML = DATA.textes.map((t,idx)=>`
+  document.getElementById("textsEditor").innerHTML = DATA.textes.map((t,idx)=>`
     <div class="task" style="background:#fbfcff">
-      <div class="row">
-        <div class="chip">ID : <b>${escapeHTML(t.id)}</b></div>
-        <button class="btn secondary" data-deltext="${t.id}">Supprimer</button>
-      </div>
+      <div class="row"><div class="chip">ID : <b>${escapeHTML(t.id)}</b></div><button class="btn secondary" data-deltext="${t.id}">Supprimer</button></div>
       <div class="hr"></div>
-      <label class="muted small">Titre</label>
-      <input type="text" data-text-title="${t.id}" value="${escapeHTML(t.titre)}"/>
-      <div style="height:8px"></div>
-      <label class="muted small">Contenu</label>
-      <textarea data-text-content="${t.id}">${escapeHTML(t.contenu)}</textarea>
+      <label class="muted small">Titre</label><input type="text" data-text-title="${t.id}" value="${escapeHTML(t.titre)}"/>
+      <label class="muted small">Contenu</label><textarea data-text-content="${t.id}">${escapeHTML(t.contenu)}</textarea>
     </div>
   `).join("");
 
-  // Exos editor
-  const ee = document.getElementById("exosEditor");
-  ee.innerHTML = DATA.exos.map(exo=> renderExoEditor(exo)).join("");
+  document.getElementById("exosEditor").innerHTML = DATA.exos.map(exo=> renderExoEditor(exo)).join("");
 
-  // Add text
   document.getElementById("addText").addEventListener("click", ()=>{
     const nid = prompt("ID du texte ? (ex: T3)");
     if(!nid) return;
-    if(DATA.textes.some(t=>t.id===nid)){ alert("ID déjà utilisé."); return; }
     DATA.textes.push({id:nid, titre:`Texte ${nid}`, contenu:"COLLE ICI..."});
-    saveData(DATA);
-    render();
+    saveData(DATA); render();
   });
 
-  // Delete text
-  te.querySelectorAll("[data-deltext]").forEach(btn=>{
+  document.querySelectorAll("[data-deltext]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.getAttribute("data-deltext");
-      if(!confirm("Supprimer ce texte ?")) return;
       DATA.textes = DATA.textes.filter(t=>t.id!==id);
-      // attention : exercices qui pointaient dessus
-      DATA.exos.forEach(e=>{ if(e.texteId===id) e.texteId = (DATA.textes[0]?.id || "T1"); });
-      saveData(DATA);
-      render();
+      DATA.exos.forEach(e=>{ if(e.texteId===id) e.texteId = (DATA.textes[0]?DATA.textes[0].id : "T1"); });
+      saveData(DATA); render();
     });
   });
 
-  // Add exo
   document.getElementById("addExo").addEventListener("click", ()=>{
     const id = prompt("ID exercice ? (ex: E7)");
     if(!id) return;
-    if(DATA.exos.some(e=>e.id===id)){ alert("ID déjà utilisé."); return; }
-    const texteId = DATA.textes[0]?.id || "T1";
-    DATA.exos.push({
-      id, type:"mcq", niveau:"moyen", titre:"Nouveau QCM", texteId,
-      consigne:"Choisis la bonne réponse.",
-      prompt:"Écris ta question…",
-      options:["A","B","C","D"], answerIndex:0, explain:"Explication…"
-    });
-    saveData(DATA);
-    render();
+    const texteId = DATA.textes[0] ? DATA.textes[0].id : "T1";
+    DATA.exos.push({ id, type:"mcq", niveau:"moyen", titre:"Nouveau QCM", texteId, consigne:"Choisis", prompt:"Écris...", options:["A","B"], answerIndex:0, explain:"..." });
+    saveData(DATA); render();
   });
 
-  // Save prof
   document.getElementById("saveProf").addEventListener("click", ()=>{
-    // Text updates
     DATA.textes.forEach(t=>{
-      const title = document.querySelector(`[data-text-title="${CSS.escape(t.id)}"]`)?.value ?? t.titre;
-      const content = document.querySelector(`[data-text-content="${CSS.escape(t.id)}"]`)?.value ?? t.contenu;
-      t.titre = title;
-      t.contenu = content;
+      const titleEl = document.querySelector('[data-text-title="'+t.id+'"]');
+      const contentEl = document.querySelector('[data-text-content="'+t.id+'"]');
+      if(titleEl) t.titre = titleEl.value;
+      if(contentEl) t.contenu = contentEl.value;
     });
 
-    // Exos updates (lecture des champs data-*)
     DATA.exos.forEach(e=>{
-      const get = (k)=> document.querySelector(`[data-exo="${CSS.escape(e.id)}"][data-k="${k}"]`)?.value;
+      const get = (k)=> { const el = document.querySelector('[data-exo="'+e.id+'"][data-k="'+k+'"]'); return el ? el.value : null; };
       e.type = get("type") || e.type;
       e.niveau = get("niveau") || e.niveau;
       e.titre = get("titre") || e.titre;
@@ -1013,318 +782,131 @@ function renderProf(){
       e.explain = get("explain") || e.explain;
 
       if(e.type==="mcq"){
-        const opts = get("options") || "";
-        e.options = opts.split("\n").map(s=>s.trim()).filter(Boolean);
-        e.answerIndex = Number(get("answerIndex") ?? e.answerIndex);
+        e.options = (get("options")||"").split("\n").map(s=>s.trim()).filter(Boolean);
+        e.answerIndex = Number(get("answerIndex") !== null ? get("answerIndex") : e.answerIndex);
       }
-      if(e.type==="select_in_text"){
-        const exp = get("expectedSelections") || "";
-        e.expectedSelections = exp.split("\n").map(s=>s.trim()).filter(Boolean);
-      }
-      if(e.type==="copy"){
-        e.expected = get("expected") || e.expected || "";
-      }
+      if(e.type==="select_in_text") e.expectedSelections = (get("expectedSelections")||"").split("\n").map(s=>s.trim()).filter(Boolean);
+      if(e.type==="copy") e.expected = get("expected") || e.expected || "";
       if(e.type==="rebuild"){
-        const pcs = get("pieces") || "";
-        e.pieces = pcs.split("\n").map(s=>s.trim()).filter(Boolean);
+        e.pieces = (get("pieces")||"").split("\n").map(s=>s.trim()).filter(Boolean);
         e.expected = get("expected") || e.expected || "";
       }
       if(e.type==="cloze"){
-        // blanks au format : id|hint|regex1,regex2
-        const braw = get("blanks") || "";
-        e.blanks = braw.split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{
-          const [bid,hint,regs] = line.split("|");
-          const accept = (regs||"").split(",").map(r=>r.trim()).filter(Boolean).map(r=>{
-            try{ return new RegExp(r,"i"); } catch { return /$^/; }
-          });
-          return { id:(bid||"b").trim(), hint:(hint||"").trim(), accept };
+        e.blanks = (get("blanks")||"").split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{
+          const pts = line.split("|");
+          const accept = (pts[2]||"").split(",").map(r=>r.trim()).filter(Boolean);
+          return { id:(pts[0]||"b").trim(), hint:(pts[1]||"").trim(), accept };
         });
       }
       if(e.type==="free_write"){
-        // rubric: minSentences, mustHaveQuestion, mustHaveAdj, mustHaveDeGN, keywords (1 par ligne)
         e.rubric = e.rubric || {};
         e.rubric.minSentences = Number(get("minSentences") || e.rubric.minSentences || 3);
         e.rubric.mustHaveQuestion = (get("mustHaveQuestion") === "true");
         e.rubric.mustHaveAdj = (get("mustHaveAdj") === "true");
         e.rubric.mustHaveDeGN = (get("mustHaveDeGN") === "true");
-        const kw = get("keywords") || "";
-        e.rubric.keywords = kw.split("\n").map(s=>s.trim()).filter(Boolean);
+        e.rubric.keywords = (get("keywords")||"").split("\n").map(s=>s.trim()).filter(Boolean);
       }
     });
 
-    saveData(DATA);
-    // Met à jour l’ordre
-    ORDER = DATA.exos.map(e=>e.id);
-    alert("Enregistré.");
-    render();
+    saveData(DATA); ORDER = DATA.exos.map(e=>e.id); alert("Enregistré."); render();
   });
 
-  document.getElementById("exitProf").addEventListener("click", ()=>{
-    MODE="eleve"; render();
-  });
-
-  // Delete exo
+  document.getElementById("exitProf").addEventListener("click", ()=>{ MODE="eleve"; render(); });
   document.querySelectorAll("[data-delexo]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const id = btn.getAttribute("data-delexo");
-      if(!confirm("Supprimer cet exercice ?")) return;
       DATA.exos = DATA.exos.filter(e=>e.id!==id);
-      saveData(DATA);
-      ORDER = DATA.exos.map(e=>e.id);
-      PROG.idx = Math.min(PROG.idx, ORDER.length-1);
-      saveProgress(PROG);
-      render();
+      saveData(DATA); ORDER = DATA.exos.map(e=>e.id);
+      PROG.idx = Math.min(PROG.idx, Math.max(0, ORDER.length-1)); saveProgress(PROG); render();
     });
   });
 }
 
 function renderExoEditor(e){
-  const typeOptions = ["mcq","select_in_text","copy","rebuild","cloze","free_write"]
-    .map(t=>`<option value="${t}" ${e.type===t?"selected":""}>${t}</option>`).join("");
-
-  const texteOptions = DATA.textes.map(t=>`<option value="${t.id}" ${e.texteId===t.id?"selected":""}>${t.id} • ${escapeHTML(t.titre)}</option>`).join("");
-
-  const common = `
-    <div class="task" style="background:#fbfcff">
-      <div class="row">
-        <div class="chip">Exo ID : <b>${escapeHTML(e.id)}</b></div>
-        <button class="btn secondary" data-delexo="${e.id}">Supprimer</button>
-      </div>
-      <div class="hr"></div>
-
-      <div class="split">
-        <div>
-          <label class="muted small">Type</label>
-          <select data-exo="${e.id}" data-k="type">${typeOptions}</select>
-        </div>
-        <div>
-          <label class="muted small">Texte support</label>
-          <select data-exo="${e.id}" data-k="texteId">${texteOptions}</select>
-        </div>
-      </div>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Titre</label>
-      <input type="text" data-exo="${e.id}" data-k="titre" value="${escapeHTML(e.titre||"")}"/>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Niveau (facile/moyen/difficile)</label>
-      <input type="text" data-exo="${e.id}" data-k="niveau" value="${escapeHTML(e.niveau||"")}"/>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Consigne</label>
-      <input type="text" data-exo="${e.id}" data-k="consigne" value="${escapeHTML(e.consigne||"")}"/>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Énoncé</label>
-      <textarea data-exo="${e.id}" data-k="prompt">${escapeHTML(e.prompt||"")}</textarea>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Explication (affichée après validation)</label>
-      <textarea data-exo="${e.id}" data-k="explain">${escapeHTML(e.explain||"")}</textarea>
-  `;
-
+  const typeOptions = ["mcq","select_in_text","copy","rebuild","cloze","free_write"].map(t=>`<option value="${t}" ${e.type===t?"selected":""}>${t}</option>`).join("");
+  const texteOptions = DATA.textes.map(t=>`<option value="${t.id}" ${e.texteId===t.id?"selected":""}>${t.id}</option>`).join("");
+  
   let specific = "";
-
-  if(e.type==="mcq"){
-    specific = `
-      <div class="hr"></div>
-      <label class="muted small">Options (1 par ligne)</label>
-      <textarea data-exo="${e.id}" data-k="options">${escapeHTML((e.options||[]).join("\n"))}</textarea>
-      <div style="height:8px"></div>
-      <label class="muted small">Index bonne réponse (0 = première)</label>
-      <input type="text" data-exo="${e.id}" data-k="answerIndex" value="${escapeHTML(String(e.answerIndex ?? 0))}"/>
-    `;
-  }
-
-  if(e.type==="select_in_text"){
-    specific = `
-      <div class="hr"></div>
-      <label class="muted small">Sélections acceptées (1 par ligne) – ex: "le train"</label>
-      <textarea data-exo="${e.id}" data-k="expectedSelections">${escapeHTML((e.expectedSelections||[]).join("\n"))}</textarea>
-      <p class="muted small">Astuce : écris exactement les GN que tu veux accepter.</p>
-    `;
-  }
-
-  if(e.type==="copy"){
-    specific = `
-      <div class="hr"></div>
-      <label class="muted small">Phrase attendue (sans guillemets)</label>
-      <textarea data-exo="${e.id}" data-k="expected">${escapeHTML(e.expected||"")}</textarea>
-    `;
-  }
-
-  if(e.type==="rebuild"){
-    specific = `
-      <div class="hr"></div>
-      <label class="muted small">Morceaux (1 par ligne)</label>
-      <textarea data-exo="${e.id}" data-k="pieces">${escapeHTML((e.pieces||[]).join("\n"))}</textarea>
-      <div style="height:8px"></div>
-      <label class="muted small">Phrase finale attendue</label>
-      <input type="text" data-exo="${e.id}" data-k="expected" value="${escapeHTML(e.expected||"")}"/>
-    `;
-  }
-
+  if(e.type==="mcq") specific = `<label class="muted small">Options</label><textarea data-exo="${e.id}" data-k="options">${escapeHTML((e.options||[]).join("\n"))}</textarea><label class="muted small">Index bonne réponse</label><input type="text" data-exo="${e.id}" data-k="answerIndex" value="${escapeHTML(String(e.answerIndex !== undefined ? e.answerIndex : 0))}"/>`;
+  if(e.type==="select_in_text") specific = `<label class="muted small">Sélections attendues</label><textarea data-exo="${e.id}" data-k="expectedSelections">${escapeHTML((e.expectedSelections||[]).join("\n"))}</textarea>`;
+  if(e.type==="copy") specific = `<label class="muted small">Phrase attendue</label><textarea data-exo="${e.id}" data-k="expected">${escapeHTML(e.expected||"")}</textarea>`;
+  if(e.type==="rebuild") specific = `<label class="muted small">Morceaux (1/ligne)</label><textarea data-exo="${e.id}" data-k="pieces">${escapeHTML((e.pieces||[]).join("\n"))}</textarea><label class="muted small">Phrase finale</label><input type="text" data-exo="${e.id}" data-k="expected" value="${escapeHTML(e.expected||"")}"/>`;
   if(e.type==="cloze"){
-    const lines = (e.blanks||[]).map(b=>{
-      const regs = (b.accept||[]).map(r=>r.source).join(",");
-      return `${b.id||"b"}|${b.hint||""}|${regs}`;
-    }).join("\n");
-    specific = `
-      <div class="hr"></div>
-      <label class="muted small">Trous (format : id|hint|regex1,regex2) – 1 par ligne</label>
-      <textarea data-exo="${e.id}" data-k="blanks">${escapeHTML(lines)}</textarea>
-      <p class="muted small">
-        Exemple : <span class="kbd">b1|un nom|chien,loup,garçon</span>
-      </p>
-    `;
+    const lines = (e.blanks||[]).map(b=> `${b.id||"b"}|${b.hint||""}|${(b.accept||[]).join(",")}`).join("\n");
+    specific = `<label class="muted small">Trous (id|hint|mot1,mot2)</label><textarea data-exo="${e.id}" data-k="blanks">${escapeHTML(lines)}</textarea>`;
   }
-
   if(e.type==="free_write"){
     const r = e.rubric || {};
-    specific = `
-      <div class="hr"></div>
-      <div class="split">
-        <div>
-          <label class="muted small">Nombre minimum de phrases</label>
-          <input type="text" data-exo="${e.id}" data-k="minSentences" value="${escapeHTML(String(r.minSentences ?? 3))}"/>
-        </div>
-        <div>
-          <label class="muted small">Contraintes (true/false)</label>
-          <div class="split">
-            <div>
-              <label class="muted small">Interrogative ?</label>
-              <select data-exo="${e.id}" data-k="mustHaveQuestion">
-                <option value="false" ${(r.mustHaveQuestion?"" :"selected")}>false</option>
-                <option value="true" ${(r.mustHaveQuestion?"selected":"")}>true</option>
-              </select>
-            </div>
-            <div>
-              <label class="muted small">“de + GN” ?</label>
-              <select data-exo="${e.id}" data-k="mustHaveDeGN">
-                <option value="false" ${(r.mustHaveDeGN?"" :"selected")}>false</option>
-                <option value="true" ${(r.mustHaveDeGN?"selected":"")}>true</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Vérif adjectif (true/false) – indicateur approximatif</label>
-      <select data-exo="${e.id}" data-k="mustHaveAdj">
-        <option value="false" ${(r.mustHaveAdj?"" :"selected")}>false</option>
-        <option value="true" ${(r.mustHaveAdj?"selected":"")}>true</option>
-      </select>
-
-      <div style="height:8px"></div>
-      <label class="muted small">Mots-clés attendus (1 par ligne) – facultatif</label>
-      <textarea data-exo="${e.id}" data-k="keywords">${escapeHTML((r.keywords||[]).join("\n"))}</textarea>
-    `;
+    specific = `<label class="muted small">Phrases min</label><input type="text" data-exo="${e.id}" data-k="minSentences" value="${escapeHTML(String(r.minSentences || 3))}"/> <label class="muted small">Question obligatoire?</label><select data-exo="${e.id}" data-k="mustHaveQuestion"><option value="false" ${r.mustHaveQuestion?"":"selected"}>Non</option><option value="true" ${r.mustHaveQuestion?"selected":""}>Oui</option></select>`;
   }
 
-  return common + specific + `</div>`;
+  return `
+    <div class="task" style="background:#fbfcff">
+      <div class="row"><div class="chip">Exo ID : <b>${escapeHTML(e.id)}</b></div><button class="btn secondary" data-delexo="${e.id}">Supprimer</button></div>
+      <div class="hr"></div>
+      <div class="split">
+        <div><label class="muted small">Type</label><select data-exo="${e.id}" data-k="type">${typeOptions}</select></div>
+        <div><label class="muted small">Texte</label><select data-exo="${e.id}" data-k="texteId">${texteOptions}</select></div>
+      </div>
+      <label class="muted small">Titre</label><input type="text" data-exo="${e.id}" data-k="titre" value="${escapeHTML(e.titre||"")}"/>
+      <label class="muted small">Énoncé</label><textarea data-exo="${e.id}" data-k="prompt">${escapeHTML(e.prompt||"")}</textarea>
+      ${specific}
+    </div>
+  `;
 }
 
 /* =========================================================
-   6) EXPORT / RESET / SHUFFLE
+   6) EXPORT / RESET / HELPERS
    ========================================================= */
 document.getElementById("btnRestart").addEventListener("click", ()=>{
   if(!confirm("Recommencer l’évaluation ?")) return;
   PROG = { startedAt: nowISO(), idx:0, answers:{}, log:[] };
-  saveProgress(PROG);
-  render();
+  saveProgress(PROG); render();
 });
 
 document.getElementById("btnClear").addEventListener("click", ()=>{
   if(!confirm("Effacer la sauvegarde (données + progrès) ?")) return;
-  localStorage.removeItem(LS_KEY);
-  localStorage.removeItem(LS_PROGRESS);
-  DATA = deepClone(DEFAULT_DATA);
-  PROG = { startedAt: nowISO(), idx:0, answers:{}, log:[] };
-  ORDER = DATA.exos.map(e=>e.id);
-  render();
+  rmLS(LS_KEY); rmLS(LS_PROGRESS);
+  DATA = deepClone(DEFAULT_DATA); PROG = { startedAt: nowISO(), idx:0, answers:{}, log:[] };
+  ORDER = DATA.exos.map(e=>e.id); render();
 });
 
 document.getElementById("btnExport").addEventListener("click", ()=>{
-  const s = computeScore();
-  const lines = [];
-  lines.push("BILAN – Français 6e");
-  lines.push(`Session : ${new Date(PROG.startedAt).toLocaleString()}`);
-  lines.push(`Score : ${s.points}/${s.maxPoints} (${Math.round((s.points/s.maxPoints)*100)}%)`);
+  const s = computeScore(); const lines = [];
+  lines.push("BILAN – Français 6e\nSession : " + new Date(PROG.startedAt).toLocaleString());
+  lines.push("Score : " + s.points + "/" + s.maxPoints);
   lines.push("—");
   for(const id of ORDER){
-    const exo = getExoById(id);
-    const a = PROG.answers[id];
-    if(!exo) continue;
-    lines.push(`${a?.ok ? "OK" : "FAUX"} • ${exo.titre} (${exo.type})`);
-    lines.push(`Réponse : ${formatAnswer(a?.value)}`);
-    lines.push(`Commentaire : ${a?.message || ""}`);
-    lines.push("—");
+    const exo = getExoById(id); const a = PROG.answers[id]; if(!exo) continue;
+    lines.push(((a && a.ok) ? "OK" : "FAUX") + " • " + exo.titre);
+    lines.push("Réponse : " + formatAnswer(a ? a.value : null));
+    lines.push("Commentaire : " + (a && a.message ? a.message : "")); lines.push("—");
   }
   const txt = lines.join("\n");
-  // copie presse-papier si possible
-  navigator.clipboard?.writeText(txt).then(()=>alert("Bilan copié dans le presse-papier !"))
-    .catch(()=>{ prompt("Copie ce bilan :", txt); });
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>alert("Bilan copié !")).catch(()=>{ prompt("Copie ce bilan :", txt); });
+  } else { prompt("Copie ce bilan :", txt); }
 });
 
-/* =========================================================
-   7) HELPERS
-   ========================================================= */
-function escapeHTML(str){
-  return (str||"").replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[m]));
-}
-
+function escapeHTML(str){ return (str||"").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
 function diffScore(a,b){
-  // score grossier : découpe en tokens et compte différences
-  const A = a.split(" ");
-  const B = b.split(" ");
-  const n = Math.max(A.length,B.length);
-  let d = 0;
-  for(let i=0;i<n;i++){
-    if((A[i]||"") !== (B[i]||"")) d++;
-  }
-  return d;
+  const A = a.split(" "), B = b.split(" "); const n = Math.max(A.length,B.length); let d = 0;
+  for(let i=0;i<n;i++){ if((A[i]||"") !== (B[i]||"")) d++; } return d;
 }
-
 function formatAnswer(v){
-  if(v==null) return "";
-  if(typeof v==="string") return v.replace(/\n/g," ").trim();
-  if(typeof v==="number") return String(v);
-  if(Array.isArray(v)) return v.join(", ");
-  if(typeof v==="object") return JSON.stringify(v);
-  return String(v);
+  if(v==null) return ""; if(typeof v==="string") return v.replace(/\n/g," ").trim();
+  if(typeof v==="number") return String(v); if(Array.isArray(v)) return v.join(", ");
+  if(typeof v==="object") return JSON.stringify(v); return String(v);
 }
-
 function tokenizeForSelection(text){
-  // Retourne une liste de tokens {t,isSpace}
-  // On garde les espaces séparés pour conserver la forme.
-  const out = [];
-  const re = /(\s+|[^\s]+)/g;
-  let m;
-  while((m = re.exec(text||""))){
-    const tok = m[0];
-    out.push({ t: tok, isSpace: /^\s+$/.test(tok) });
-  }
-  return out;
+  const out = []; const re = /(\s+|[^\s]+)/g; let m;
+  while((m = re.exec(text||""))){ out.push({ t: m[0], isSpace: /^\s+$/.test(m[0]) }); } return out;
 }
 
-/* =========================================================
-   8) INITIALISATION + SHUFFLE
-   ========================================================= */
-ORDER = DATA.exos.map(e=>e.id);
-
-render();
-
-// Mélanger l'ordre des exos (optionnel) : double clic sur la pastille (petit easter egg)
+ORDER = DATA.exos.map(e=>e.id); render();
 document.getElementById("pill").addEventListener("dblclick", ()=>{
   if(!confirm("Mélanger l'ordre des exercices ?")) return;
-  ORDER = shuffle(ORDER);
-  PROG.idx = 0;
-  saveProgress(PROG);
-  render();
+  ORDER = shuffle(ORDER); PROG.idx = 0; saveProgress(PROG); render();
 });
 </script>
 </body>
