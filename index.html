@@ -1,913 +1,223 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Évaluation Français 6e – Module complet (textes personnalisés)</title>
-  <style>
-    :root{
-      --bg:#0f1115; --card:#ffffffef; --ink:#111; --muted:#555;
-      --accent:#0088ce; --good:#1a7f37; --bad:#b42318; --line:#0000001a;
-      --chip:#e9f4ff; --chipb:#bfe3fb;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:linear-gradient(180deg,#0f1115,#141a28); color:#fff;
-      padding:16px; display:flex; justify-content:center;
-    }
-    .wrap{width:min(1100px,100%);}
-    header{display:flex; gap:12px; align-items:flex-start; justify-content:space-between; margin-bottom:12px}
-    h1{margin:0; font-size:18px}
-    .sub{margin:6px 0 0; color:#d7def0; font-size:13px; line-height:1.35}
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      background:#0b1220; border:1px solid #26324c; color:#d7def0;
-      padding:8px 10px; border-radius:999px; font-size:12px; white-space:nowrap;
-    }
-    .card{
-      background:var(--card); color:var(--ink);
-      border:1px solid var(--line); border-radius:16px; padding:14px;
-      box-shadow:0 10px 30px #00000055;
-    }
-    .grid{display:grid; gap:12px}
-    .two{grid-template-columns: 1.1fr .9fr}
-    @media (max-width: 920px){ .two{grid-template-columns:1fr} }
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between}
-    .btn{
-      border:0; border-radius:12px; padding:10px 12px; cursor:pointer;
-      background:var(--accent); color:#fff; font-weight:800;
-    }
-    .btn.secondary{background:#eef2f6; color:#111; border:1px solid var(--line)}
-    .btn.ghost{background:transparent; border:1px dashed #9db5d9; color:#0b3550}
-    .btn:disabled{opacity:.6; cursor:not-allowed}
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--chip); border:1px solid var(--chipb);
-      color:#0b3550; padding:6px 10px; border-radius:999px; font-size:12px;
-    }
-    .hr{height:1px; background:var(--line); margin:10px 0}
-    .kpi{display:grid; grid-template-columns: repeat(4,1fr); gap:10px}
-    @media (max-width: 700px){ .kpi{grid-template-columns: repeat(2,1fr);} }
-    .kpi .box{
-      border:1px solid var(--line); border-radius:14px; padding:10px; background:#fff;
-    }
-    .kpi .v{font-size:18px; font-weight:900}
-    .kpi .l{color:var(--muted); font-size:12px; margin-top:2px}
-    .title2{font-weight:900; margin:0 0 6px}
-    .muted{color:var(--muted)}
-    textarea, input[type="text"], input[type="password"]{
-      width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--line); font-size:14px;
-      background:#fff;
-    }
-    textarea{min-height:120px; resize:vertical}
-    select{
-      width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--line); font-size:14px; background:#fff;
-    }
-    .task{
-      border:1px solid var(--line); border-radius:14px; padding:12px; background:#fff;
-    }
-    .taskTop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
-    .taskName{font-weight:900}
-    .badge{
-      font-size:12px; padding:3px 8px; border-radius:999px;
-      background:#f3f6ff; border:1px solid #d7e2ff; color:#102a43; white-space:nowrap;
-    }
-    .prompt{margin:10px 0; line-height:1.35}
-    .opts{display:grid; gap:8px}
-    label.opt{
-      display:flex; gap:10px; align-items:flex-start;
-      border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fff; cursor:pointer;
-    }
-    label.opt:hover{border-color:#b9d7f0}
-    input[type="radio"]{margin-top:3px}
-    .feedback{
-      margin-top:10px; padding:10px; border-radius:12px;
-      border:1px solid var(--line); background:#fafbff;
-    }
-    .ok{border-color:#b7e3c2; background:#f0fff4}
-    .ko{border-color:#f7c0bb; background:#fff3f2}
-    .fbTitle{font-weight:900; margin:0 0 5px}
-    .small{font-size:12px}
-    .split{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    @media (max-width: 800px){ .split{grid-template-columns:1fr} }
-    .textBox{
-      border:1px solid var(--line); border-radius:14px; padding:10px; background:#fff;
-      max-height:320px; overflow:auto; line-height:1.5;
-    }
-    .word{
-      display:inline-block; padding:1px 3px; border-radius:6px; margin:1px 0;
-      cursor:pointer;
-    }
-    .word:hover{background:#eef6ff}
-    .selected{background:#d9efff; outline:1px solid #86c5ff}
-    .bank{
-      border:1px solid var(--line); border-radius:14px; padding:10px; background:#fff;
-      display:flex; gap:8px; flex-wrap:wrap; min-height:58px;
-    }
-    .piece{
-      background:#f3f6ff; border:1px solid #d7e2ff; border-radius:999px;
-      padding:7px 10px; cursor:grab; user-select:none; font-size:13px;
-    }
-    .zone{
-      border:2px dashed #b9c7e6; border-radius:14px; padding:10px; background:#fbfcff; min-height:58px;
-      display:flex; gap:8px; flex-wrap:wrap;
-    }
-    .kbd{
-      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:12px; padding:2px 6px; border-radius:8px; border:1px solid var(--line); background:#f6f8fa;
-    }
-    .list{
-      border:1px solid var(--line); border-radius:14px; padding:10px; background:#fff;
-      max-height:260px; overflow:auto;
-    }
-    .item{padding:8px 6px; border-bottom:1px solid var(--line)}
-    .item:last-child{border-bottom:0}
-    .tagGood{color:var(--good); font-weight:900}
-    .tagBad{color:var(--bad); font-weight:900}
-    details summary{cursor:pointer; font-weight:900; color:#0b3550}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquête Climat Social SPV - Anglet</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #d32f2f; text-align: center; }
+        h2 { color: #555; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; margin-top: 40px; }
+        .intro { background: #ffebee; padding: 15px; border-left: 4px solid #d32f2f; margin-bottom: 30px; font-size: 0.9em; }
+        
+        .question-block { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .question-text { font-weight: bold; margin-bottom: 15px; display: block; }
+        
+        .scale-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px; }
+        .scale-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .scale-item input { margin-bottom: 5px; cursor: pointer; transform: scale(1.2); }
+        .scale-labels { display: flex; justify-content: space-between; font-size: 0.8em; color: #666; margin-top: 5px; }
+        
+        .radio-group label { display: block; margin-bottom: 8px; cursor: pointer; }
+        .radio-group input { margin-right: 10px; transform: scale(1.2); }
+
+        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; }
+        
+        button {
+            display: block; width: 100%; padding: 15px; background: #d32f2f; color: white;
+            border: none; border-radius: 4px; font-size: 1.1em; font-weight: bold;
+            cursor: pointer; transition: background 0.3s; margin-top: 30px;
+        }
+        button:hover { background: #b71c1c; }
+        #message { margin-top: 20px; text-align: center; font-weight: bold; }
+    </style>
+    <script>
+        // Fonction pour générer facilement les échelles de 1 à 10
+        function renderScale(qName, labelMin = "1 (Pas d'accord)", labelMax = "10 (Tout à fait d'accord)") {
+            let html = '<div class="scale-container">';
+            for(let i=1; i<=10; i++) {
+                html += `<label class="scale-item"><input type="radio" name="${qName}" value="${i}" required>${i}</label>`;
+            }
+            html += `</div><div class="scale-labels"><span>${labelMin}</span><span>${labelMax}</span></div>`;
+            document.write(html);
+        }
+    </script>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>Évaluation Français 6e – Phrase & GN</h1>
-      <p class="sub">
-        Tu peux <b>coller tes textes</b> en <span class="kbd">Mode Prof</span>.
-        Exercices : QCM, recopie, texte à trous, sélection et écriture.
-      </p>
+
+<div class="container">
+    <h1>Consultation SPV - Centre d'Anglet</h1>
+    <div class="intro">
+        Ce questionnaire est <strong>strictement anonyme</strong>. Vos réponses permettront à l'encadrement volontaire d'établir un état des lieux objectif concernant le fonctionnement et le moral du groupe. <br><br>
+        <em>Veuillez répondre sur une échelle de 1 (Pas du tout d'accord / Totalement insatisfait) à 10 (Tout à fait d'accord / Totalement satisfait).</em>
     </div>
-    <div class="pill" id="pill">Mode élève</div>
-  </header>
 
-  <div class="grid two">
-    <div class="card" id="main"></div>
-    <div class="card" id="side"></div>
-  </div>
+    <form id="spv-form">
 
-  <div class="row" style="margin-top:12px">
-    <button class="btn secondary" id="btnRestart">Recommencer</button>
-    <button class="btn ghost" id="btnExport">Exporter le bilan</button>
-    <button class="btn ghost" id="btnClear">Effacer sauvegarde</button>
-  </div>
+        <h2>Partie 1 : La formation (FMPA)</h2>
+        
+        <div class="question-block">
+            <label class="question-text">1. Le programme et les objectifs des manœuvres mensuelles (FMPA) me sont communiqués de manière claire et anticipée.</label>
+            <script>renderScale("q1");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">2. Le contenu des FMPA est pertinent et adapté à ma réalité opérationnelle.</label>
+            <script>renderScale("q2");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">3. Les formateurs font preuve de pédagogie et maîtrisent leurs sujets.</label>
+            <script>renderScale("q3");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">4. L'attitude des formateurs favorise un climat d'apprentissage positif et constructif.</label>
+            <script>renderScale("q4");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">5. La qualité des locaux et des équipements mis à disposition lors des FMPA est satisfaisante.</label>
+            <script>renderScale("q5");</script>
+        </div>
+
+        <h2>Partie 2 : L'encadrement direct SPV</h2>
+
+        <div class="question-block">
+            <label class="question-text">6. Je me sens soutenu(e) et écouté(e) par l'encadrement volontaire.</label>
+            <script>renderScale("q6");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">7. Les échanges avec l'encadrement SPV sont fluides, constructifs et transparents.</label>
+            <script>renderScale("q7");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">8. L'encadrement volontaire valorise mon engagement à sa juste valeur.</label>
+            <script>renderScale("q8");</script>
+        </div>
+
+        <h2>Partie 3 : La Chefferie et la Gouvernance</h2>
+
+        <div class="question-block">
+            <label class="question-text">9. Les décisions prises par la chefferie concernant l'organisation du centre sont transparentes et expliquées au groupe SPV.</label>
+            <script>renderScale("q9");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">10. De manière générale, je me sens considéré(e) et respecté(e) par la chefferie en tant que SPV.</label>
+            <script>renderScale("q10");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">11. Comment qualifieriez-vous le ton et la nature des communications de la chefferie envers le groupe SPV ?</label>
+            <div class="radio-group">
+                <label><input type="radio" name="q11" value="Très respectueux et constructif" required> Très respectueux et constructif</label>
+                <label><input type="radio" name="q11" value="Cordial mais distant"> Cordial mais distant</label>
+                <label><input type="radio" name="q11" value="Inapproprié et dévalorisant"> Inapproprié et dévalorisant</label>
+                <label><input type="radio" name="q11" value="Limite irrespectueux ou insultant"> Limite irrespectueux ou insultant</label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">12. Le fait d'intégrer de nouvelles recrues sans consultation ni avis du Comité Consultatif Local (CCL) a un impact négatif sur ma motivation.</label>
+            <script>renderScale("q12", "1 (Pas d'impact)", "10 (Fort impact négatif)");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">13. Le manque d'intégration des SPV dans les décisions qui les concernent est la raison principale de mon éventuelle baisse de motivation.</label>
+            <script>renderScale("q13");</script>
+        </div>
+
+        <h2>Partie 4 : Administration et Bilan</h2>
+
+        <div class="question-block">
+            <label class="question-text">14. Les dysfonctionnements ou retards réguliers dans la gestion administrative de mes vacations me donnent le sentiment que le temps que j'accorde au centre n'est pas respecté à sa juste valeur.</label>
+            <script>renderScale("q14", "1 (Pas du tout)", "10 (Totalement ce que je ressens)");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">15. Les exigences actuelles respectent mon équilibre vie pro / vie perso / vie SPV.</label>
+            <script>renderScale("q15");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">16. Comment évaluez-vous votre niveau de motivation global actuel en tant que SPV à Anglet ?</label>
+            <script>renderScale("q16", "1 (Désengagement total)", "10 (Motivation maximale)");</script>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">17. Quel est aujourd'hui le frein PRINCIPAL à votre engagement ? (1 seul choix)</label>
+            <div class="radio-group">
+                <label><input type="radio" name="q17" value="Qualité des FMPA" required> La qualité des FMPA / de la formation</label>
+                <label><input type="radio" name="q17" value="Relation encadrement SPV"> La relation avec l'encadrement SPV</label>
+                <label><input type="radio" name="q17" value="Manque considération chefferie"> Le manque de considération / la communication de la chefferie</label>
+                <label><input type="radio" name="q17" value="Problèmes administratifs"> Les problèmes administratifs et d'indemnisation</label>
+                <label><input type="radio" name="q17" value="Gouvernance et recrutement"> Les décisions de recrutement/gouvernance sans avis du CCL</label>
+                <label><input type="radio" name="q17" value="Aucun / Autre"> Aucun de ces choix / Autre</label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <label class="question-text">18. Avez-vous des remarques, des exemples précis ou des propositions d'amélioration ? (Facultatif)</label>
+            <textarea name="q18_libre" rows="4" placeholder="Votre message anonyme ici..."></textarea>
+        </div>
+
+        <button type="submit" id="submit-btn">Envoyer mes réponses anonymement</button>
+        <div id="message"></div>
+    </form>
 </div>
 
 <script>
-/* =========================================================
-   0) DONNÉES
-   ========================================================= */
-const DEFAULT_DATA = {
-  profCode: "64",
-  textes: [
-    {
-      id:"T1",
-      titre:"Texte 1",
-      contenu:"COLLE ICI TON TEXTE 1 (depuis les photos)..."
-    },
-    {
-      id:"T2",
-      titre:"Texte 2",
-      contenu:"COLLE ICI TON TEXTE 2..."
-    }
-  ],
-  exos: [
-    {
-      id:"E1", type:"mcq", niveau:"facile", titre:"Ponctuation", texteId:"T1",
-      consigne:"Choisis la bonne réponse.", prompt:"Une phrase se termine généralement par…",
-      options:["une virgule", "un point / ? / !", "des guillemets", "des parenthèses"],
-      answerIndex:1, explain:"La ponctuation forte : point, point d’interrogation, point d’exclamation."
-    },
-    {
-      id:"E2", type:"select_in_text", niveau:"moyen", titre:"Repérer un GN", texteId:"T1",
-      consigne:"Dans le texte, clique exactement sur le groupe nominal demandé.",
-      prompt:"Clique sur un groupe nominal (déterminant + nom).",
-      expectedSelections:["le train","un crayon","la porte"],
-      explain:"Un GN minimal = déterminant + nom."
-    },
-    {
-      id:"E3", type:"copy", niveau:"moyen", titre:"Recopie sans erreur", texteId:"T1",
-      consigne:"Recopie exactement la phrase ci-dessous.",
-      prompt:"Recopie : « COLLE ICI UNE PHRASE DU TEXTE 1 »", expected:"COLLE ICI UNE PHRASE DU TEXTE 1",
-      explain:"On vérifie : majuscules, accents, apostrophes, espaces et ponctuation."
-    },
-    {
-      id:"E4", type:"rebuild", niveau:"moyen", titre:"Reconstituer la phrase", texteId:"T1",
-      consigne:"Remets les morceaux dans l’ordre pour reconstruire la phrase.",
-      pieces:["dans la forêt","Le petit loup","avance","silencieusement"],
-      expected:"Le petit loup avance silencieusement dans la forêt",
-      explain:"Sujet + verbe + compléments."
-    },
-    {
-      id:"E5", type:"cloze", niveau:"difficile", titre:"Expansions du nom", texteId:"T1",
-      consigne:"Complète les trous avec les bons mots.",
-      prompt:"Complète : « Le ____ (nom) ____ (adjectif) de ____ (complément du nom) »",
-      blanks:[
-        {id:"b1", accept:["chien","loup","garçon"], hint:"un nom"},
-        {id:"b2", accept:["noir","rapide","grand"], hint:"un adjectif"},
-        {id:"b3", accept:["la nuit","la ville","la montagne"], hint:"de + GN"}
-      ],
-      explain:"Expansions du nom : adjectif épithète, complément du nom (de + GN), relative."
-    },
-    {
-      id:"E6", type:"free_write", niveau:"difficile", titre:"Écriture libre", texteId:"T2",
-      consigne:"Écris 3 phrases correctes.",
-      prompt:"Écris 3 phrases qui reprennent le thème du texte. Contraintes :\n- 1 phrase interrogative\n- 1 GN avec adjectif épithète\n- 1 GN avec complément du nom",
-      rubric:{ minSentences:3, mustHaveQuestion:true, mustHaveAdj:true, mustHaveDeGN:true, keywords:["cabane","forêt"] },
-      explain:"On vérifie la variété des phrases et la présence d’expansions."
-    }
-  ]
-};
+    // Ton URL Google Script a été intégrée ici
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2zd5jtWcDknhPxVdBX5j0FirXrCHXPv6P760T-Ik-MGYWGBXzcMQAU-zlzQGfLeqNtA/exec';
 
-/* =========================================================
-   1) OUTILS & SAUVEGARDE SÉCURISÉE
-   ========================================================= */
-const LS_KEY = "fr6_module_data_v1";
-const LS_PROGRESS = "fr6_module_progress_v1";
+    document.getElementById('spv-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submit-btn');
+        const msg = document.getElementById('message');
+        btn.innerText = 'Envoi en cours...';
+        btn.disabled = true;
 
-function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
-function getLS(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
-function setLS(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
-function rmLS(k){ try{localStorage.removeItem(k);}catch(e){} }
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
 
-function normalize(s){
-  return (s||"").toLowerCase().replace(/[’']/g,"'").replace(/\s+/g," ").trim().replace(/[«»"]/g,"").replace(/[.,;:!?]/g,"").trim();
-}
-function nowISO(){ return new Date().toISOString(); }
-
-function loadData(){
-  const raw = getLS(LS_KEY);
-  if(!raw) return deepClone(DEFAULT_DATA);
-  try{
-    const parsed = JSON.parse(raw);
-    return {
-      profCode: parsed.profCode || DEFAULT_DATA.profCode,
-      textes: Array.isArray(parsed.textes) ? parsed.textes : deepClone(DEFAULT_DATA.textes),
-      exos: Array.isArray(parsed.exos) ? parsed.exos : deepClone(DEFAULT_DATA.exos),
-    };
-  } catch(e) { return deepClone(DEFAULT_DATA); }
-}
-function saveData(data){ setLS(LS_KEY, JSON.stringify(data)); }
-
-function loadProgress(){
-  const raw = getLS(LS_PROGRESS);
-  if(!raw) return { startedAt: nowISO(), idx:0, answers:{}, log:[] };
-  try{
-    const p = JSON.parse(raw);
-    return {
-      startedAt: p.startedAt || nowISO(),
-      idx: Number.isFinite(p.idx) ? p.idx : 0,
-      answers: p.answers || {},
-      log: Array.isArray(p.log) ? p.log : []
-    };
-  } catch(e) { return { startedAt: nowISO(), idx:0, answers:{}, log:[] }; }
-}
-function saveProgress(p){ setLS(LS_PROGRESS, JSON.stringify(p)); }
-
-function shuffle(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-
-function countSentences(text){ const m = (text||"").match(/[.!?]+/g); return m ? m.length : 0; }
-function hasQuestion(text){ return /\?/.test(text||""); }
-function hasAdjLike(text){ return /\b(une|un|des|le|la|les)\s+\w+\s+\w+/i.test(text||""); }
-function hasDeGN(text){ return /\bde\s+(le|la|l'|les|mon|ma|mes|ton|ta|tes|son|sa|ses|notre|nos|votre|vos|leur|leurs|\w+)/i.test(text||""); }
-function includesKeywords(text, keywords){
-  if(!keywords || !keywords.length) return true;
-  const n = (text||"").toLowerCase();
-  return keywords.some(k => n.includes((k||"").toLowerCase()));
-}
-
-/* =========================================================
-   2) APP STATE
-   ========================================================= */
-let DATA = loadData();
-let PROG = loadProgress();
-let MODE = "eleve";
-let ORDER = DATA.exos.map(e=>e.id);
-
-function getExoById(id){ return DATA.exos.find(e=>e.id===id); }
-function getTexteById(id){ return DATA.textes.find(t=>t.id===id); }
-function currentExo(){ return getExoById(ORDER[PROG.idx]); }
-
-function setPill(){
-  const el = document.getElementById("pill");
-  const total = ORDER.length;
-  const done = Object.keys(PROG.answers||{}).length;
-  el.textContent = (MODE==="prof" ? "Mode prof" : "Mode élève") + ` • ${done}/${total} répondu`;
-}
-
-/* =========================================================
-   3) RENDER
-   ========================================================= */
-const main = document.getElementById("main");
-const side = document.getElementById("side");
-
-function render(){
-  setPill();
-  renderSide();
-  if(MODE==="prof") renderProf();
-  else renderEleve();
-}
-
-function renderSide(){
-  const total = ORDER.length;
-  const answered = Object.keys(PROG.answers||{}).length;
-  const score = computeScore();
-  const pct = (total && score.maxPoints) ? Math.round((score.points/score.maxPoints)*100) : 0;
-
-  const exo = currentExo();
-  const texte = exo ? getTexteById(exo.texteId) : null;
-
-  side.innerHTML = `
-    <div class="row">
-      <div class="chip">Niveau : <b>6e</b></div>
-      <div class="chip">Session : <b>${new Date(PROG.startedAt).toLocaleString()}</b></div>
-    </div>
-    <div class="hr"></div>
-    <div class="kpi">
-      <div class="box"><div class="v">${answered}/${total}</div><div class="l">Répondu</div></div>
-      <div class="box"><div class="v">${score.points}/${score.maxPoints}</div><div class="l">Points</div></div>
-      <div class="box"><div class="v">${pct}%</div><div class="l">Réussite</div></div>
-      <div class="box"><div class="v">${PROG.idx+1}/${total}</div><div class="l">Exercice</div></div>
-    </div>
-    <div class="hr"></div>
-    <p class="title2">Texte support</p>
-    <p class="muted small">${texte ? (texte.titre + " (" + texte.id + ")") : "—"}</p>
-    <div class="textBox" id="textBox">${texte ? escapeHTML(texte.contenu).replace(/\n/g,"<br>") : "Aucun texte sélectionné."}</div>
-    <div class="hr"></div>
-    <details>
-      <summary>Bilan détaillé</summary>
-      <div class="list" style="margin-top:10px">${renderLog()}</div>
-    </details>
-    <div class="hr"></div>
-    <div class="row">
-      <button class="btn secondary" id="btnPrev" ${PROG.idx<=0?"disabled":""}>← Précédent</button>
-      <button class="btn" id="btnNext" ${PROG.idx>=ORDER.length-1?"disabled":""}>Suivant →</button>
-    </div>
-    <div class="hr"></div>
-    <div class="row">
-      <button class="btn ghost" id="btnMode">${MODE==="prof"?"Passer en élève":"Mode prof"}</button>
-    </div>
-  `;
-
-  const btnPrev = document.getElementById("btnPrev");
-  const btnNext = document.getElementById("btnNext");
-  if(btnPrev) btnPrev.addEventListener("click", ()=>{ PROG.idx = Math.max(0, PROG.idx-1); saveProgress(PROG); render(); });
-  if(btnNext) btnNext.addEventListener("click", ()=>{ PROG.idx = Math.min(ORDER.length-1, PROG.idx+1); saveProgress(PROG); render(); });
-
-  document.getElementById("btnMode").addEventListener("click", ()=>{
-    if(MODE==="prof"){ MODE="eleve"; render(); return; }
-    const code = prompt("Code prof ?");
-    if(code === DATA.profCode){ MODE="prof"; render(); }
-    else alert("Code incorrect.");
-  });
-}
-
-function renderLog(){
-  if(!PROG.log || !PROG.log.length) return `<div class="item muted">Pas encore de réponses.</div>`;
-  return PROG.log.slice().reverse().map(entry=>{
-    const tag = entry.ok ? `<span class="tagGood">OK</span>` : `<span class="tagBad">FAUX</span>`;
-    return `<div class="item">
-      ${tag} • <b>${escapeHTML(entry.titre||entry.id)}</b> <span class="muted">(${escapeHTML(entry.type)})</span>
-      <div class="muted small">${escapeHTML(entry.detail||"")}</div>
-    </div>`;
-  }).join("");
-}
-
-function renderEleve(){
-  const exo = currentExo();
-  if(!exo){ main.innerHTML = `<p class="title2">Aucun exercice.</p>`; return; }
-
-  const already = PROG.answers[exo.id];
-  const texte = getTexteById(exo.texteId);
-
-  main.innerHTML = `
-    <div class="task">
-      <div class="taskTop">
-        <div>
-          <div class="taskName">${escapeHTML(exo.titre)} <span class="badge">${escapeHTML(exo.type)}</span></div>
-          <div class="muted small">Niveau : ${escapeHTML(exo.niveau||"—")} • Exercice ID : ${exo.id}</div>
-        </div>
-        <div class="badge">${escapeHTML(exo.texteId || "—")}</div>
-      </div>
-      <div class="hr"></div>
-      <div class="muted"><b>Consigne :</b> ${escapeHTML(exo.consigne||"")}</div>
-      <div class="prompt">${escapeHTML(exo.prompt||"").replace(/\n/g,"<br>")}</div>
-      <div id="taskBody"></div>
-      <div class="row" style="margin-top:10px">
-        <button class="btn" id="btnValidate">${already ? "Revalider" : "Valider"}</button>
-        <button class="btn secondary" id="btnShowText">Afficher/masquer le texte</button>
-      </div>
-      <div id="fb"></div>
-    </div>
-  `;
-
-  document.getElementById("btnShowText").addEventListener("click", ()=>{
-    const box = document.getElementById("textBox");
-    if(box) box.style.display = (box.style.display==="none" ? "block" : "none");
-  });
-
-  renderTaskBody(exo, texte);
-
-  document.getElementById("btnValidate").addEventListener("click", ()=>{ validate(exo); });
-
-  if(already){ showFeedback(already.ok, already.message, exo.explain); }
-}
-
-function renderTaskBody(exo, texte){
-  const body = document.getElementById("taskBody");
-  const saved = PROG.answers[exo.id] ? PROG.answers[exo.id].value : null;
-
-  if(exo.type==="mcq"){
-    body.innerHTML = `<div class="opts">` + 
-      exo.options.map((opt,i)=>`
-        <label class="opt">
-          <input type="radio" name="mcq" value="${i}" ${String(saved)===String(i)?"checked":""}/>
-          <div>${escapeHTML(opt)}</div>
-        </label>
-      `).join("") + `</div>`;
-    return;
-  }
-
-  if(exo.type==="copy"){
-    body.innerHTML = `
-      <div class="inputWrap">
-        <label class="muted small">Ta copie :</label>
-        <textarea id="copyInput" placeholder="Recopie ici…">${saved?escapeHTML(saved):""}</textarea>
-        <div class="muted small">On compare avec la phrase attendue (accents/ponctuation/espaces inclus).</div>
-      </div>`;
-    return;
-  }
-
-  if(exo.type==="rebuild"){
-    const pieces = exo.pieces || [];
-    const initial = (saved && saved.bank && saved.zone) ? saved : null;
-    const bankPieces = initial ? initial.bank : shuffle(pieces);
-    const zonePieces = initial ? initial.zone : [];
-
-    body.innerHTML = `
-      <div class="split">
-        <div><p class="muted small"><b>Banque</b> (glisse vers la zone)</p><div class="bank" id="bank"></div></div>
-        <div><p class="muted small"><b>Zone</b> (mets dans l’ordre)</p><div class="zone" id="zone"></div></div>
-      </div>`;
-    const bank = document.getElementById("bank");
-    const zone = document.getElementById("zone");
-
-    function makePiece(txt){
-      const el = document.createElement("div");
-      el.className = "piece"; el.textContent = txt; el.draggable = true;
-      el.addEventListener("dragstart", (e)=>{
-        e.dataTransfer.setData("text/plain", txt); e.dataTransfer.effectAllowed = "move"; el.dataset.dragging = "1";
-      });
-      el.addEventListener("dragend", ()=>{ delete el.dataset.dragging; });
-      el.addEventListener("click", ()=>{
-        if(el.parentElement.id==="bank"){ zone.appendChild(el); } else{ bank.appendChild(el); }
-      });
-      return el;
-    }
-
-    function allowDrop(container){
-      container.addEventListener("dragover", (e)=>{ e.preventDefault(); });
-      container.addEventListener("drop", (e)=>{
-        e.preventDefault(); const txt = e.dataTransfer.getData("text/plain");
-        const dragging = document.querySelector('.piece[data-dragging="1"]');
-        if(dragging && dragging.textContent===txt){ container.appendChild(dragging); }
-      });
-    }
-    allowDrop(bank); allowDrop(zone);
-    bankPieces.forEach(t=> bank.appendChild(makePiece(t)));
-    zonePieces.forEach(t=> zone.appendChild(makePiece(t)));
-    return;
-  }
-
-  if(exo.type==="cloze"){
-    const blanks = exo.blanks || [];
-    body.innerHTML = `
-      <div class="inputWrap">
-        ${blanks.map((b,idx)=>`
-          <div>
-            <label class="muted small">Trou ${idx+1} <span class="muted">(${escapeHTML(b.hint||"")})</span></label>
-            <input type="text" id="blank_${b.id}" placeholder="Réponse…" value="${(saved && saved[b.id])?escapeHTML(saved[b.id]):""}"/>
-          </div>
-        `).join("")}
-      </div>`;
-    return;
-  }
-
-  if(exo.type==="select_in_text"){
-    const content = (texte && texte.contenu) ? texte.contenu : "";
-    const tokens = tokenizeForSelection(content);
-
-    body.innerHTML = `
-      <p class="muted small">Clique des mots dans ce texte (ici) pour sélectionner un groupe, puis valide.</p>
-      <div class="textBox" id="selectBox"></div>
-      <div class="row" style="margin-top:10px">
-        <div class="chip">Sélection : <b id="selOut">—</b></div>
-        <button class="btn secondary" id="btnClearSel">Effacer sélection</button>
-      </div>`;
-
-    const selectBox = document.getElementById("selectBox");
-    const selOut = document.getElementById("selOut");
-    let selectedIdx = new Set();
-
-    function updateSel(){
-      const words = [];
-      [...selectedIdx].sort((a,b)=>a-b).forEach(i=>{
-        const t = tokens[i] ? tokens[i].t : "";
-        if(t.trim()) words.push(t);
-      });
-      const selText = words.join("");
-      selOut.textContent = selText.trim() ? selText.trim() : "—";
-      selectBox.dataset.selection = selText.trim();
-    }
-
-    tokens.forEach((tok, i)=>{
-      const span = document.createElement("span"); span.className = "word"; span.textContent = tok.t;
-      if(tok.isSpace) span.style.cursor = "default";
-      span.addEventListener("click", ()=>{
-        if(tok.isSpace) return;
-        if(selectedIdx.has(i)){ selectedIdx.delete(i); span.classList.remove("selected"); }
-        else { selectedIdx.add(i); span.classList.add("selected"); }
-        updateSel();
-      });
-      selectBox.appendChild(span);
-    });
-
-    document.getElementById("btnClearSel").addEventListener("click", ()=>{
-      selectedIdx.clear();
-      [...selectBox.querySelectorAll(".word")].forEach(w=>w.classList.remove("selected"));
-      updateSel();
-    });
-
-    if(saved){ selectBox.dataset.selection = saved; selOut.textContent = saved; } 
-    else { updateSel(); }
-    return;
-  }
-
-  if(exo.type==="free_write"){
-    body.innerHTML = `
-      <div class="inputWrap">
-        <label class="muted small">Ta réponse (écriture libre) :</label>
-        <textarea id="freeInput" placeholder="Écris ici…">${saved?escapeHTML(saved):""}</textarea>
-      </div>
-      <div class="kpi">
-        <div class="box"><div class="v" id="m_sent">0</div><div class="l">Phrases</div></div>
-        <div class="box"><div class="v" id="m_q">—</div><div class="l">Interrogative ?</div></div>
-        <div class="box"><div class="v" id="m_de">—</div><div class="l">“de + GN”</div></div>
-        <div class="box"><div class="v" id="m_kw">—</div><div class="l">Mots-clés</div></div>
-      </div>`;
-
-    const input = document.getElementById("freeInput");
-    const rub = exo.rubric || {};
-    function updateMetrics(){
-      const t = input.value || "";
-      document.getElementById("m_sent").textContent = countSentences(t);
-      document.getElementById("m_q").textContent = hasQuestion(t) ? "Oui" : "Non";
-      document.getElementById("m_de").textContent = hasDeGN(t) ? "Oui" : "Non";
-      document.getElementById("m_kw").textContent = includesKeywords(t, rub.keywords||[]) ? "Oui" : "Non";
-    }
-    input.addEventListener("input", updateMetrics);
-    updateMetrics();
-    return;
-  }
-}
-
-function showFeedback(ok, message, explain){
-  const fb = document.getElementById("fb");
-  if(!fb) return;
-  fb.innerHTML = `
-    <div class="feedback ${ok?"ok":"ko"}">
-      <p class="fbTitle">${ok ? "✅ Correct" : "❌ À revoir"}</p>
-      <p class="fbText">${escapeHTML(message||"")}</p>
-      ${explain ? `<div class="hr"></div><p class="fbText"><b>Explication :</b> ${escapeHTML(explain)}</p>` : ""}
-    </div>
-  `;
-}
-
-/* =========================================================
-   4) VALIDATION
-   ========================================================= */
-function validate(exo){
-  let res = { ok:false, points:0, max:1, value:null, message:"" };
-
-  if(exo.type==="mcq"){
-    const checked = document.querySelector('input[name="mcq"]:checked');
-    const v = checked ? Number(checked.value) : null;
-    res.value = v;
-    if(v===null){ res.message = "Choisis une réponse."; } 
-    else if(v === exo.answerIndex){ res.ok = true; res.points = 1; res.message = "Bonne réponse."; } 
-    else { res.message = "Mauvaise réponse."; }
-  }
-
-  if(exo.type==="copy"){
-    const inpEl = document.getElementById("copyInput");
-    const inp = inpEl ? inpEl.value : "";
-    res.value = inp;
-    const expected = (exo.expected || "");
-    const a = inp.replace(/\s+/g," ").trim();
-    const b = expected.replace(/\s+/g," ").trim();
-    if(!a){ res.message = "Recopie la phrase."; } 
-    else if(a === b){ res.ok = true; res.points = 1; res.message = "Recopie parfaite."; } 
-    else { const diff = diffScore(a,b); res.message = `Il y a des différences (${diff} zone(s)). Recompare les accents et la ponctuation.`; }
-  }
-
-  if(exo.type==="rebuild"){
-    const bank = [...document.querySelectorAll("#bank .piece")].map(p=>p.textContent);
-    const zone = [...document.querySelectorAll("#zone .piece")].map(p=>p.textContent);
-    res.value = { bank, zone };
-    const built = zone.join(" ").replace(/\s+/g," ").trim();
-    const expected = (exo.expected||"").replace(/\s+/g," ").trim();
-    if(zone.length === 0){ res.message = "Glisse des morceaux dans la zone."; } 
-    else if(built === expected){ res.ok = true; res.points = 1; res.message = "Phrase reconstruite correctement."; } 
-    else { res.message = "L’ordre n’est pas encore correct."; }
-  }
-
-  if(exo.type==="cloze"){
-    const out = {}; let okAll = true;
-    for(const b of (exo.blanks||[])){
-      const inputEl = document.getElementById("blank_" + b.id);
-      const v = inputEl ? inputEl.value.trim() : "";
-      out[b.id] = v;
-      const n = normalize(v);
-      const accepts = (b.accept||[]).some(str => {
-        try { const r = new RegExp(str, "i"); return r.test(v) || r.test(n); } catch(e) { return false; }
-      });
-      if(!v || !accepts) okAll = false;
-    }
-    res.value = out;
-    if(Object.values(out).every(v=>!v)){ res.message = "Complète les trous."; } 
-    else if(okAll){ res.ok = true; res.points = 1; res.message = "Tous les trous sont corrects."; } 
-    else { res.message = "Un ou plusieurs trous sont à corriger."; }
-  }
-
-  if(exo.type==="select_in_text"){
-    const selBox = document.getElementById("selectBox");
-    const sel = (selBox && selBox.dataset) ? selBox.dataset.selection : "";
-    res.value = sel;
-    const nsel = normalize(sel);
-    if(!sel || !sel.trim()){ res.message = "Clique des mots pour faire une sélection."; } 
-    else {
-      const ok = (exo.expectedSelections||[]).some(x => normalize(x) === nsel);
-      if(ok){ res.ok = true; res.points = 1; res.message = `Sélection acceptée : “${sel.trim()}”.`; } 
-      else { res.message = `Sélection non attendue : “${sel.trim()}”. Essaie un autre GN.`; }
-    }
-  }
-
-  if(exo.type==="free_write"){
-    const freeInp = document.getElementById("freeInput");
-    const text = freeInp ? freeInp.value : "";
-    res.value = text;
-    const rub = exo.rubric || {};
-    const sent = countSentences(text);
-    const cond1 = sent >= (rub.minSentences || 1);
-    const cond2 = !rub.mustHaveQuestion || hasQuestion(text);
-    const cond3 = !rub.mustHaveAdj || hasAdjLike(text);
-    const cond4 = !rub.mustHaveDeGN || hasDeGN(text);
-    const cond5 = !rub.keywords || !rub.keywords.length || includesKeywords(text, rub.keywords);
-
-    const ok = cond1 && cond2 && cond3 && cond4 && cond5;
-    if(!text.trim()){ res.message = "Écris ta réponse."; } 
-    else if(ok){ res.ok = true; res.points = 1; res.message = "Les contraintes semblent respectées."; } 
-    else { res.message = "Il manque certains éléments demandés."; }
-  }
-
-  PROG.answers[exo.id] = { ok: res.ok, value: res.value, points: res.points, max: res.max, message: res.message };
-  PROG.log.push({ at: nowISO(), id: exo.id, titre: exo.titre, type: exo.type, ok: res.ok, detail: res.message });
-  saveProgress(PROG);
-
-  showFeedback(res.ok, res.message, exo.explain);
-  renderSide();
-}
-
-function computeScore(){
-  let points=0, maxPoints=0;
-  for(const id of ORDER){
-    const exo = getExoById(id);
-    if(!exo) continue;
-    maxPoints += 1;
-    const a = PROG.answers[id];
-    if(a && a.ok) points += 1;
-  }
-  return { points, maxPoints };
-}
-
-/* =========================================================
-   5) MODE PROF
-   ========================================================= */
-function renderProf(){
-  main.innerHTML = `
-    <p class="title2">Mode prof – Personnalisation</p>
-    <div class="hr"></div>
-    <div class="grid">
-      <div class="task">
-        <div class="taskTop">
-          <div class="taskName">Textes (supports)</div>
-          <button class="btn secondary" id="addText">+ Ajouter</button>
-        </div>
-        <div class="hr"></div>
-        <div id="textsEditor"></div>
-      </div>
-      <div class="task">
-        <div class="taskTop">
-          <div class="taskName">Exercices</div>
-          <button class="btn secondary" id="addExo">+ Ajouter</button>
-        </div>
-        <div class="hr"></div>
-        <div id="exosEditor"></div>
-      </div>
-      <div class="row">
-        <button class="btn" id="saveProf">Enregistrer</button>
-        <button class="btn secondary" id="exitProf">Retour mode élève</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("textsEditor").innerHTML = DATA.textes.map((t,idx)=>`
-    <div class="task" style="background:#fbfcff">
-      <div class="row"><div class="chip">ID : <b>${escapeHTML(t.id)}</b></div><button class="btn secondary" data-deltext="${t.id}">Supprimer</button></div>
-      <div class="hr"></div>
-      <label class="muted small">Titre</label><input type="text" data-text-title="${t.id}" value="${escapeHTML(t.titre)}"/>
-      <label class="muted small">Contenu</label><textarea data-text-content="${t.id}">${escapeHTML(t.contenu)}</textarea>
-    </div>
-  `).join("");
-
-  document.getElementById("exosEditor").innerHTML = DATA.exos.map(exo=> renderExoEditor(exo)).join("");
-
-  document.getElementById("addText").addEventListener("click", ()=>{
-    const nid = prompt("ID du texte ? (ex: T3)");
-    if(!nid) return;
-    DATA.textes.push({id:nid, titre:`Texte ${nid}`, contenu:"COLLE ICI..."});
-    saveData(DATA); render();
-  });
-
-  document.querySelectorAll("[data-deltext]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.getAttribute("data-deltext");
-      DATA.textes = DATA.textes.filter(t=>t.id!==id);
-      DATA.exos.forEach(e=>{ if(e.texteId===id) e.texteId = (DATA.textes[0]?DATA.textes[0].id : "T1"); });
-      saveData(DATA); render();
-    });
-  });
-
-  document.getElementById("addExo").addEventListener("click", ()=>{
-    const id = prompt("ID exercice ? (ex: E7)");
-    if(!id) return;
-    const texteId = DATA.textes[0] ? DATA.textes[0].id : "T1";
-    DATA.exos.push({ id, type:"mcq", niveau:"moyen", titre:"Nouveau QCM", texteId, consigne:"Choisis", prompt:"Écris...", options:["A","B"], answerIndex:0, explain:"..." });
-    saveData(DATA); render();
-  });
-
-  document.getElementById("saveProf").addEventListener("click", ()=>{
-    DATA.textes.forEach(t=>{
-      const titleEl = document.querySelector('[data-text-title="'+t.id+'"]');
-      const contentEl = document.querySelector('[data-text-content="'+t.id+'"]');
-      if(titleEl) t.titre = titleEl.value;
-      if(contentEl) t.contenu = contentEl.value;
-    });
-
-    DATA.exos.forEach(e=>{
-      const get = (k)=> { const el = document.querySelector('[data-exo="'+e.id+'"][data-k="'+k+'"]'); return el ? el.value : null; };
-      e.type = get("type") || e.type;
-      e.niveau = get("niveau") || e.niveau;
-      e.titre = get("titre") || e.titre;
-      e.texteId = get("texteId") || e.texteId;
-      e.consigne = get("consigne") || e.consigne;
-      e.prompt = get("prompt") || e.prompt;
-      e.explain = get("explain") || e.explain;
-
-      if(e.type==="mcq"){
-        e.options = (get("options")||"").split("\n").map(s=>s.trim()).filter(Boolean);
-        e.answerIndex = Number(get("answerIndex") !== null ? get("answerIndex") : e.answerIndex);
-      }
-      if(e.type==="select_in_text") e.expectedSelections = (get("expectedSelections")||"").split("\n").map(s=>s.trim()).filter(Boolean);
-      if(e.type==="copy") e.expected = get("expected") || e.expected || "";
-      if(e.type==="rebuild"){
-        e.pieces = (get("pieces")||"").split("\n").map(s=>s.trim()).filter(Boolean);
-        e.expected = get("expected") || e.expected || "";
-      }
-      if(e.type==="cloze"){
-        e.blanks = (get("blanks")||"").split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{
-          const pts = line.split("|");
-          const accept = (pts[2]||"").split(",").map(r=>r.trim()).filter(Boolean);
-          return { id:(pts[0]||"b").trim(), hint:(pts[1]||"").trim(), accept };
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            msg.style.color = 'green';
+            msg.innerText = 'Merci, vos réponses ont été enregistrées avec succès de manière anonyme.';
+            this.reset();
+            btn.style.display = 'none';
+        })
+        .catch(error => {
+            msg.style.color = 'red';
+            msg.innerText = 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer.';
+            btn.innerText = 'Envoyer mes réponses anonymement';
+            btn.disabled = false;
         });
-      }
-      if(e.type==="free_write"){
-        e.rubric = e.rubric || {};
-        e.rubric.minSentences = Number(get("minSentences") || e.rubric.minSentences || 3);
-        e.rubric.mustHaveQuestion = (get("mustHaveQuestion") === "true");
-        e.rubric.mustHaveAdj = (get("mustHaveAdj") === "true");
-        e.rubric.mustHaveDeGN = (get("mustHaveDeGN") === "true");
-        e.rubric.keywords = (get("keywords")||"").split("\n").map(s=>s.trim()).filter(Boolean);
-      }
     });
-
-    saveData(DATA); ORDER = DATA.exos.map(e=>e.id); alert("Enregistré."); render();
-  });
-
-  document.getElementById("exitProf").addEventListener("click", ()=>{ MODE="eleve"; render(); });
-  document.querySelectorAll("[data-delexo]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.getAttribute("data-delexo");
-      DATA.exos = DATA.exos.filter(e=>e.id!==id);
-      saveData(DATA); ORDER = DATA.exos.map(e=>e.id);
-      PROG.idx = Math.min(PROG.idx, Math.max(0, ORDER.length-1)); saveProgress(PROG); render();
-    });
-  });
-}
-
-function renderExoEditor(e){
-  const typeOptions = ["mcq","select_in_text","copy","rebuild","cloze","free_write"].map(t=>`<option value="${t}" ${e.type===t?"selected":""}>${t}</option>`).join("");
-  const texteOptions = DATA.textes.map(t=>`<option value="${t.id}" ${e.texteId===t.id?"selected":""}>${t.id}</option>`).join("");
-  
-  let specific = "";
-  if(e.type==="mcq") specific = `<label class="muted small">Options</label><textarea data-exo="${e.id}" data-k="options">${escapeHTML((e.options||[]).join("\n"))}</textarea><label class="muted small">Index bonne réponse</label><input type="text" data-exo="${e.id}" data-k="answerIndex" value="${escapeHTML(String(e.answerIndex !== undefined ? e.answerIndex : 0))}"/>`;
-  if(e.type==="select_in_text") specific = `<label class="muted small">Sélections attendues</label><textarea data-exo="${e.id}" data-k="expectedSelections">${escapeHTML((e.expectedSelections||[]).join("\n"))}</textarea>`;
-  if(e.type==="copy") specific = `<label class="muted small">Phrase attendue</label><textarea data-exo="${e.id}" data-k="expected">${escapeHTML(e.expected||"")}</textarea>`;
-  if(e.type==="rebuild") specific = `<label class="muted small">Morceaux (1/ligne)</label><textarea data-exo="${e.id}" data-k="pieces">${escapeHTML((e.pieces||[]).join("\n"))}</textarea><label class="muted small">Phrase finale</label><input type="text" data-exo="${e.id}" data-k="expected" value="${escapeHTML(e.expected||"")}"/>`;
-  if(e.type==="cloze"){
-    const lines = (e.blanks||[]).map(b=> `${b.id||"b"}|${b.hint||""}|${(b.accept||[]).join(",")}`).join("\n");
-    specific = `<label class="muted small">Trous (id|hint|mot1,mot2)</label><textarea data-exo="${e.id}" data-k="blanks">${escapeHTML(lines)}</textarea>`;
-  }
-  if(e.type==="free_write"){
-    const r = e.rubric || {};
-    specific = `<label class="muted small">Phrases min</label><input type="text" data-exo="${e.id}" data-k="minSentences" value="${escapeHTML(String(r.minSentences || 3))}"/> <label class="muted small">Question obligatoire?</label><select data-exo="${e.id}" data-k="mustHaveQuestion"><option value="false" ${r.mustHaveQuestion?"":"selected"}>Non</option><option value="true" ${r.mustHaveQuestion?"selected":""}>Oui</option></select>`;
-  }
-
-  return `
-    <div class="task" style="background:#fbfcff">
-      <div class="row"><div class="chip">Exo ID : <b>${escapeHTML(e.id)}</b></div><button class="btn secondary" data-delexo="${e.id}">Supprimer</button></div>
-      <div class="hr"></div>
-      <div class="split">
-        <div><label class="muted small">Type</label><select data-exo="${e.id}" data-k="type">${typeOptions}</select></div>
-        <div><label class="muted small">Texte</label><select data-exo="${e.id}" data-k="texteId">${texteOptions}</select></div>
-      </div>
-      <label class="muted small">Titre</label><input type="text" data-exo="${e.id}" data-k="titre" value="${escapeHTML(e.titre||"")}"/>
-      <label class="muted small">Énoncé</label><textarea data-exo="${e.id}" data-k="prompt">${escapeHTML(e.prompt||"")}</textarea>
-      ${specific}
-    </div>
-  `;
-}
-
-/* =========================================================
-   6) EXPORT / RESET / HELPERS
-   ========================================================= */
-document.getElementById("btnRestart").addEventListener("click", ()=>{
-  if(!confirm("Recommencer l’évaluation ?")) return;
-  PROG = { startedAt: nowISO(), idx:0, answers:{}, log:[] };
-  saveProgress(PROG); render();
-});
-
-document.getElementById("btnClear").addEventListener("click", ()=>{
-  if(!confirm("Effacer la sauvegarde (données + progrès) ?")) return;
-  rmLS(LS_KEY); rmLS(LS_PROGRESS);
-  DATA = deepClone(DEFAULT_DATA); PROG = { startedAt: nowISO(), idx:0, answers:{}, log:[] };
-  ORDER = DATA.exos.map(e=>e.id); render();
-});
-
-document.getElementById("btnExport").addEventListener("click", ()=>{
-  const s = computeScore(); const lines = [];
-  lines.push("BILAN – Français 6e\nSession : " + new Date(PROG.startedAt).toLocaleString());
-  lines.push("Score : " + s.points + "/" + s.maxPoints);
-  lines.push("—");
-  for(const id of ORDER){
-    const exo = getExoById(id); const a = PROG.answers[id]; if(!exo) continue;
-    lines.push(((a && a.ok) ? "OK" : "FAUX") + " • " + exo.titre);
-    lines.push("Réponse : " + formatAnswer(a ? a.value : null));
-    lines.push("Commentaire : " + (a && a.message ? a.message : "")); lines.push("—");
-  }
-  const txt = lines.join("\n");
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(()=>alert("Bilan copié !")).catch(()=>{ prompt("Copie ce bilan :", txt); });
-  } else { prompt("Copie ce bilan :", txt); }
-});
-
-function escapeHTML(str){ return (str||"").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
-function diffScore(a,b){
-  const A = a.split(" "), B = b.split(" "); const n = Math.max(A.length,B.length); let d = 0;
-  for(let i=0;i<n;i++){ if((A[i]||"") !== (B[i]||"")) d++; } return d;
-}
-function formatAnswer(v){
-  if(v==null) return ""; if(typeof v==="string") return v.replace(/\n/g," ").trim();
-  if(typeof v==="number") return String(v); if(Array.isArray(v)) return v.join(", ");
-  if(typeof v==="object") return JSON.stringify(v); return String(v);
-}
-function tokenizeForSelection(text){
-  const out = []; const re = /(\s+|[^\s]+)/g; let m;
-  while((m = re.exec(text||""))){ out.push({ t: m[0], isSpace: /^\s+$/.test(m[0]) }); } return out;
-}
-
-ORDER = DATA.exos.map(e=>e.id); render();
-document.getElementById("pill").addEventListener("dblclick", ()=>{
-  if(!confirm("Mélanger l'ordre des exercices ?")) return;
-  ORDER = shuffle(ORDER); PROG.idx = 0; saveProgress(PROG); render();
-});
 </script>
+
 </body>
 </html>
