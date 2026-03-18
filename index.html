@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enquête Climat Social SPV - Anglet</title>
+    <title>Enquête FMPA SPV - Anglet</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,7 +35,7 @@
         .radio-group label { display: block; margin-bottom: 8px; cursor: pointer; }
         .radio-group input { margin-right: 10px; transform: scale(1.2); }
 
-        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; }
+        textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; font-size: 1em; }
         
         button {
             display: block; width: 100%; padding: 15px; background: #d32f2f; color: white;
@@ -68,6 +68,18 @@
 
     <form id="spv-form">
 
+        <div class="question-block" style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
+            <label class="question-text" for="equipe">Quel est votre équipe de manœuvre affectée ? (Facultatif)</label>
+            <select name="equipe" id="equipe">
+                <option value="">-- Choisir une équipe (ou laisser vide) --</option>
+                <option value="Equipe 1">Équipe 1</option>
+                <option value="Equipe 2">Équipe 2</option>
+                <option value="Equipe 3">Équipe 3</option>
+                <option value="Equipe 4">Équipe 4</option>
+                <option value="Autre/Spécifique">Autre / Spécifique</option>
+            </select>
+        </div>
+
         <h2>Partie 1 : La formation (FMPA)</h2>
         
         <div class="question-block">
@@ -76,7 +88,7 @@
         </div>
 
         <div class="question-block">
-            <label class="question-text">2. Le contenu des FMPA est pertinent et adapté à ma réalité opérationnelle.</label>
+            <label class="question-text">2. Le contenu des FMPA est pertinent et adapté à ma reality opérationnelle.</label>
             <script>renderScale("q2");</script>
         </div>
 
@@ -184,7 +196,6 @@
 </div>
 
 <script>
-    // Ton URL Google Script a été intégrée ici
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2zd5jtWcDknhPxVdBX5j0FirXrCHXPv6P760T-Ik-MGYWGBXzcMQAU-zlzQGfLeqNtA/exec';
 
     document.getElementById('spv-form').addEventListener('submit', function(e) {
