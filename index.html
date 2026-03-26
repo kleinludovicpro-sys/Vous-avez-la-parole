@@ -49,7 +49,6 @@
         #message { margin-top: 20px; text-align: center; font-weight: bold; }
     </style>
     <script>
-        // Fonction pour générer facilement les échelles de 1 à 10
         function renderScale(qName, labelMin = "1 (Pas d'accord)", labelMax = "10 (Tout à fait d'accord)") {
             let html = '<div class="scale-container">';
             for(let i=1; i<=10; i++) {
@@ -207,42 +206,47 @@
         btn.innerText = 'Envoi en cours...';
         btn.disabled = true;
 
-        const formData = new FormData(this);
+        const form = this;
         const data = {};
+        const equipes = [];
 
-        // Parcourir tous les éléments du formulaire
-        for (let [key, value] of formData.entries()) {
-            if (key === 'equipe') {
-                // Traiter les équipes séparément (multiples valeurs)
-                if (!data.equipe) {
-                    data.equipe = [];
+        // Récupérer tous les champs du formulaire
+        const inputs = form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            if (input.type === 'checkbox' && input.name === 'equipe') {
+                if (input.checked) {
+                    equipes.push(input.value);
                 }
-                data.equipe.push(value);
-            } else {
-                data[key] = value;
+            } else if (input.type === 'radio') {
+                if (input.checked) {
+                    data[input.name] = input.value;
+                }
+            } else if (input.type !== 'checkbox') {
+                data[input.name] = input.value;
             }
-        }
+        });
 
-        // Convertir le tableau d'équipes en chaîne
-        if (data.equipe && Array.isArray(data.equipe)) {
-            data.equipe = data.equipe.join(', ');
-        }
+        // Ajouter les équipes
+        data.equipe = equipes.length > 0 ? equipes.join(', ') : '';
+
+        console.log("Données envoyées :", data);
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
-        .then(() => {
+        .then(response => response.json())
+        .then(result => {
             msg.style.color = 'green';
             msg.innerText = 'Merci, vos réponses ont été enregistrées avec succès de manière anonyme.';
-            this.reset();
+            form.reset();
             btn.style.display = 'none';
         })
         .catch(error => {
             msg.style.color = 'red';
             msg.innerText = 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer.';
+            console.error("Erreur :", error);
             btn.innerText = 'Envoyer mes réponses anonymement';
             btn.disabled = false;
         });
