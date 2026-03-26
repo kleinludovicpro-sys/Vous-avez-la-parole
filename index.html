@@ -35,6 +35,9 @@
         .radio-group label { display: block; margin-bottom: 8px; cursor: pointer; }
         .radio-group input { margin-right: 10px; transform: scale(1.2); }
 
+        .checkbox-group label { display: block; margin-bottom: 8px; cursor: pointer; }
+        .checkbox-group input { margin-right: 10px; transform: scale(1.2); }
+
         textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; font-size: 1em; }
         
         button {
@@ -50,7 +53,7 @@
         function renderScale(qName, labelMin = "1 (Pas d'accord)", labelMax = "10 (Tout à fait d'accord)") {
             let html = '<div class="scale-container">';
             for(let i=1; i<=10; i++) {
-                html += `<label class="scale-item"><input type="radio" name="${qName}" value="${i}" required>${i}</label>`;
+                html += `<label class="scale-item"><input type="radio" name="${qName}" value="${i}">${i}</label>`;
             }
             html += `</div><div class="scale-labels"><span>${labelMin}</span><span>${labelMax}</span></div>`;
             document.write(html);
@@ -69,18 +72,17 @@
     <form id="spv-form">
 
         <div class="question-block" style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
-            <label class="question-text" for="equipe">Quelle est votre équipe de manœuvre affectée ? (Facultatif)</label>
-            <select name="equipe" id="equipe">
-                <option value="">-- Choisir une équipe (ou laisser vide) --</option>
-                <option value="Equipe 1">Équipe 1</option>
-                <option value="Equipe 2">Équipe 2</option>
-                <option value="Equipe 3">Équipe 3</option>
-                <option value="Equipe 4">Équipe 4</option>
-                <option value="Equipe 5">Équipe 5</option>
-                <option value="Equipe 6">Équipe 6</option>
-                <option value="Equipe 7">Équipe 7</option>
-                <option value="Equipe 8">Équipe 8</option>
-            </select>
+            <label class="question-text">Quelle est votre équipe de manœuvre affectée ? (Facultatif)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="equipe" value="Equipe 1"> Équipe 1</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 2"> Équipe 2</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 3"> Équipe 3</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 4"> Équipe 4</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 5"> Équipe 5</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 6"> Équipe 6</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 7"> Équipe 7</label>
+                <label><input type="checkbox" name="equipe" value="Equipe 8"> Équipe 8</label>
+            </div>
         </div>
 
         <h2>Partie 1 : La formation (FMPA)</h2>
@@ -144,7 +146,7 @@
             <script>renderScale("q11");</script>
         </div>
         
-  <div class="question-block">
+        <div class="question-block">
             <label class="question-text">12. Avez-vous des exemples précis ou des précisions sur la communication avec la chefferie ? (Facultatif)</label>
             <textarea name="q12_libre" rows="4" placeholder="Votre message anonyme ici..."></textarea>
         </div>
@@ -174,7 +176,7 @@
         <div class="question-block">
             <label class="question-text">17. Quel est aujourd'hui le frein PRINCIPAL à une plus grande implication aux FMPA mensuelles ? (1 seul choix)</label>
             <div class="radio-group">
-                <label><input type="radio" name="q17" value="Qualité des FMPA" required> La qualité des FMPA / de la formation</label>
+                <label><input type="radio" name="q17" value="Qualité des FMPA"> La qualité des FMPA / de la formation</label>
                 <label><input type="radio" name="q17" value="Relation encadrement SPV"> La relation avec l'encadrement SPV</label>
                 <label><input type="radio" name="q17" value="Manque considération chefferie"> Le manque de considération / la communication de la chefferie</label>
                 <label><input type="radio" name="q17" value="Problèmes administratifs"> Les problèmes administratifs et d'indemnisation</label>
@@ -182,6 +184,7 @@
                 <label><input type="radio" name="q17" value="Aucun / Autre"> Aucun de ces choix / Autre</label>
                 <label><input type="radio" name="q17" value="Pas de difficulté"> Je n'ai pas de difficulté à m'impliquer </label>
             </div>
+        </div>
 
         <div class="question-block">
             <label class="question-text">18. Avez-vous des remarques, des exemples précis ou des propositions d'amélioration ? (Facultatif)</label>
@@ -205,7 +208,13 @@
         btn.disabled = true;
 
         const formData = new FormData(this);
+        
+        // Récupérer toutes les équipes sélectionnées
+        const equipesSelectionnees = formData.getAll('equipe');
         const data = Object.fromEntries(formData.entries());
+        if (equipesSelectionnees.length > 0) {
+            data.equipe = equipesSelectionnees.join(', ');
+        }
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
