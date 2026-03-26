@@ -231,13 +231,17 @@
 
         console.log("Données envoyées :", data);
 
+        // Envoyer en FormData au lieu de JSON
+        const formData = new FormData();
+        for (let key in data) {
+            formData.append(key, data[key]);
+        }
+
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            payload: formData
         })
-        .then(response => response.json())
-        .then(result => {
+        .then(() => {
             msg.style.color = 'green';
             msg.innerText = 'Merci, vos réponses ont été enregistrées avec succès de manière anonyme.';
             form.reset();
