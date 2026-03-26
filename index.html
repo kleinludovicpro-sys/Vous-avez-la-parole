@@ -141,7 +141,7 @@
         </div> 
         
         <div class="question-block">
-            <label class="question-text">11.Comment qualifieriez-vous globalement la communication envers le groupe SPV ?. </label>
+            <label class="question-text">11. Comment qualifieriez-vous globalement la communication envers le groupe SPV ?</label>
             <script>renderScale("q11");</script>
         </div>
         
@@ -181,7 +181,7 @@
                 <label><input type="radio" name="q17" value="Problèmes administratifs"> Les problèmes administratifs et d'indemnisation</label>
                 <label><input type="radio" name="q17" value="Gouvernance et recrutement"> Les décisions de recrutement/gouvernance sans avis du CCL</label>
                 <label><input type="radio" name="q17" value="Aucun / Autre"> Aucun de ces choix / Autre</label>
-                <label><input type="radio" name="q17" value="Pas de difficulté"> Je n'ai pas de difficulté à m'impliquer </label>
+                <label><input type="radio" name="q17" value="Pas de difficulté"> Je n'ai pas de difficulté à m'impliquer</label>
             </div>
         </div>
 
@@ -206,45 +206,24 @@
         btn.innerText = 'Envoi en cours...';
         btn.disabled = true;
 
-        const form = this;
-        const data = {};
-        const equipes = [];
-
-        // Récupérer tous les champs du formulaire
-        const inputs = form.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            if (input.type === 'checkbox' && input.name === 'equipe') {
-                if (input.checked) {
-                    equipes.push(input.value);
-                }
-            } else if (input.type === 'radio') {
-                if (input.checked) {
-                    data[input.name] = input.value;
-                }
-            } else if (input.type !== 'checkbox') {
-                data[input.name] = input.value;
-            }
-        });
-
-        // Ajouter les équipes
-        data.equipe = equipes.length > 0 ? equipes.join(', ') : '';
-
-        console.log("Données envoyées :", data);
-
-        // Envoyer en FormData au lieu de JSON
-        const formData = new FormData();
-        for (let key in data) {
-            formData.append(key, data[key]);
+        const formData = new FormData(this);
+        
+        // Traiter les équipes multiples
+        const equipes = formData.getAll('equipe');
+        formData.delete('equipe');
+        if (equipes.length > 0) {
+            formData.append('equipe', equipes.join(', '));
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            payload: formData
+            body: formData
         })
-        .then(() => {
+        .then(response => response.text())
+        .then(result => {
             msg.style.color = 'green';
             msg.innerText = 'Merci, vos réponses ont été enregistrées avec succès de manière anonyme.';
-            form.reset();
+            this.reset();
             btn.style.display = 'none';
         })
         .catch(error => {
