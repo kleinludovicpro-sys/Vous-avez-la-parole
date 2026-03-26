@@ -208,12 +208,24 @@
         btn.disabled = true;
 
         const formData = new FormData(this);
-        
-        // Récupérer toutes les équipes sélectionnées
-        const equipesSelectionnees = formData.getAll('equipe');
-        const data = Object.fromEntries(formData.entries());
-        if (equipesSelectionnees.length > 0) {
-            data.equipe = equipesSelectionnees.join(', ');
+        const data = {};
+
+        // Parcourir tous les éléments du formulaire
+        for (let [key, value] of formData.entries()) {
+            if (key === 'equipe') {
+                // Traiter les équipes séparément (multiples valeurs)
+                if (!data.equipe) {
+                    data.equipe = [];
+                }
+                data.equipe.push(value);
+            } else {
+                data[key] = value;
+            }
+        }
+
+        // Convertir le tableau d'équipes en chaîne
+        if (data.equipe && Array.isArray(data.equipe)) {
+            data.equipe = data.equipe.join(', ');
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
